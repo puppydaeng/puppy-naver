@@ -66,7 +66,7 @@
           <!-- 공통: 업체명 / 블로그명 -->
           <div>
             <label for="companyName" class="block text-sm font-semibold text-slate-700 mb-1" id="companyLabel">블로그명 / 상호명</label>
-            <input type="text" id="companyName" required value="퍼피댕" placeholder="예:퍼피댕,퍼피댕OO점,퍼피댕OO,OO퍼피댕" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
+            <input type="text" id="companyName" required value="퍼피댕" placeholder="예: 퍼피댕, 퍼피댕대전점" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
           </div>
 
           <!-- [정보성 전용 영역] -->
@@ -121,12 +121,12 @@
 
             <div>
               <label for="promoKeywords" class="block text-sm font-semibold text-slate-700 mb-1">홍보 타겟 키워드 (쉼표 구분)</label>
-              <input type="text" id="promoKeywords" placeholder="예: OO강아지분양, OO애견분양 등" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
+              <input type="text" id="promoKeywords" placeholder="예: 대전강아지분양, 대전말티푸분양" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
             </div>
 
             <div>
               <label for="promoDetails" class="block text-sm font-semibold text-slate-700 mb-1">매장/서비스 강점 & 특장점</label>
-              <textarea id="promoDetails" rows="4" placeholder="예: 모든견종 분양가15만원부터, 강제추가금 없어요, 거품없이 만나는 안심분양소" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm"></textarea>
+              <textarea id="promoDetails" rows="4" placeholder="예: 거품 없는 15만원 분양가, 강제 추가금 없음, 체계적인 사후 관리" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm"></textarea>
             </div>
           </div>
 
@@ -222,7 +222,7 @@
     const categoryPresets = {
       "🎓 교육 & 훈련 / 행동 교정 (입질, 배변, 분리불안, 짖음 등)": [
         { keywords: "강아지 분리불안 훈련, 강아지 짖음 원인, 켄넬 훈련법", details: "- 외출 전후 과도한 인사 자제하기 (5분 원칙 실천)\n- 켄넬을 안전한 독립 공간으로 인식시키는 행동교정 기법\n- 분리불안 완화를 위한 노즈워크 및 노포인팅 훈련 팁" },
-        { keywords: "강아지 입질 교정, 새끼강아지 물어뜯는 이유, 강아지 이갈이", details: "- 이갈이 시기 잇몸 통증 완화를 위한 터그놀이 및 우드스틱 활용\n- 손이나 발을 물었을 때 단호한 거절 반응과 대체 장난감 제공법\n- 습관성 입질 방지를 위한 에너지 소모 산책 가이드" },
+        { keywords: "강아지 입질 교정, 새끼강아지 물어뜯는 이유, 강아지 이갈이", details: "- 이갈이 시기 잇몸 통증 완화를 위한 터그놀이 및 우드ส틱 활용\n- 손이나 발을 물었을 때 단호한 거절 반응과 대체 장난감 제공법\n- 습관성 입질 방지를 위한 에너지 소모 산책 가이드" },
         { keywords: "강아지 배변훈련 성공법, 성견 배변 실수 원인, 강아지 배변패드 위치", details: "- 배변 장소 선정 기준 및 칭찬 중심의 보상 타이밍 설정\n- 잦은 실수 시 냄새 제거 처리 방법 및 징벌 훈련의 위험성\n- 스트레스 및 질환으로 인한 일시적 배변 실수 구별법" },
         { keywords: "강아지 외부소리 짖음, 층간소음 강아지 훈련, 둔감화 훈련", details: "- 현관문 소리, 벨소리에 민감하게 짖는 원인 분석\n- 벨소리 녹음본을 활용한 단계별 둔감화 및 긍정 강화 보상 기법\n- 이웃 간 층간소음 갈등 줄이기 위한 집안 환경 조성 노하우" }
       ],
@@ -313,7 +313,7 @@
         .replace(/\[ID:[^\]]+\]/g, '')
         .replace(/AEO\/GEO 최적화|AEO|GEO|SEO 최적화/g, '')
         .replace(/^제목:\s*/gim, '')
-        .replace(/^> \s*(.*$)/gim, '\n[ "$1" ]\n')
+        .replace(/^> \s*["“]*(.*?)["“]*\s*$/gim, '\n[ "$1" ]\n')
         .replace(/^###?\s*(.*$)/gim, '\n[ "$1" ]\n')
         .replace(/\*\*(.*?)\*\*/g, '$1')
         .replace(/\*(.*?)\*/g, '$1')
@@ -330,12 +330,12 @@
         .replace(/^제목:\s*/gim, '');
 
       return clean
-        .replace(/^# (.*$)/gim, '<h2 style="font-size: 20px; font-weight: 900; color: #1e293b; padding-bottom: 12px; margin-bottom: 16px; border-bottom: 2px solid #b3815a;">$1</h2>')
-        .replace(/^## (.*$)/gim, '<h2 style="font-size: 20px; font-weight: 900; color: #1e293b; padding-bottom: 12px; margin-bottom: 16px; border-bottom: 2px solid #b3815a;">$1</h2>')
-        .replace(/^> (.*$)/gim, '<blockquote style="margin: 16px 0; padding: 16px 20px; border-left: 4px solid #b3815a; background-color: #fbf7f3; color: #5c3e26; font-weight: bold; font-size: 15px; border-top-right-radius: 8px; border-bottom-right-radius: 8px;">“ $1 ”</blockquote>')
-        .replace(/^### (.*$)/gim, '<blockquote style="margin: 12px 0; padding: 12px 16px; border-left: 4px solid #b3815a; background-color: #f1f5f9; color: #0f172a; font-weight: bold; font-size: 15px;">“ $1 ”</blockquote>')
-        .replace(/\*\*(.*?)\*\*/g, '<strong style="font-weight: bold; color: #8c6243; background-color: #f3e9de; padding: 2px 6px; border-radius: 4px;">$1</strong>')
-        .replace(/^---$/gim, '<hr style="margin: 24px 0; border: none; border-top: 2px dashed #e2ba93;" />')
+        .replace(/^# (.*$)/gim, '<h2 style="font-size: 22px; font-weight: 900; color: #1e293b; padding-bottom: 12px; margin-bottom: 20px; border-bottom: 2px solid #b3815a;">$1</h2>')
+        .replace(/^## (.*$)/gim, '<h2 style="font-size: 22px; font-weight: 900; color: #1e293b; padding-bottom: 12px; margin-bottom: 20px; border-bottom: 2px solid #b3815a;">$1</h2>')
+        .replace(/^> \s*["“]*(.*?)["“]*\s*$/gim, '<blockquote style="margin: 20px 0; padding: 16px 20px; border-left: 4px solid #b3815a; background-color: #fbf7f3; color: #5c3e26; font-weight: bold; font-size: 15px; border-top-right-radius: 8px; border-bottom-right-radius: 8px;">$1</blockquote>')
+        .replace(/^### (.*$)/gim, '<blockquote style="margin: 16px 0; padding: 14px 18px; border-left: 4px solid #b3815a; background-color: #f1f5f9; color: #0f172a; font-weight: bold; font-size: 15px;">$1</blockquote>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong style="font-weight: bold; color: #784c2a; background-color: #fbf0e6; padding: 2px 6px; border-radius: 4px;">$1</strong>')
+        .replace(/^---$/gim, '<hr style="margin: 28px 0; border: none; border-top: 2px dashed #d1a884;" />')
         .replace(/\n/g, '<br>');
     }
 
@@ -488,8 +488,9 @@
 1. 작성자 서사 페르소나: ${randomPersona}
 2. 작성 상황 배경: ${randomSituation}
 3. **원고 제목 작성 규칙**: 
-   - 원고 맨 첫 줄에 클릭을 부르는 네이버 블로그 제목을 작성하세요.
-   - **반드시 사용자가 입력한 메인 타겟 키워드(쉼표로 구분된 첫 번째 키워드)로 제목이 완벽하게 시작**해야 합니다.
+   - 원고 맨 첫 줄에 # 기호를 붙여 H2 사이즈 제목으로 작성하세요 (예: # 타겟키워드 포함된 제목).
+   - **중요 키워드 배치 규칙**: 사용자가 입력한 키워드들(쉼표로 구분됨) 중 첫 번째 메인 키워드(예: 대전강아지분양)는 **반드시 제목의 맨 처음에 시작**되어야 합니다. 만약 쉼표로 구분된 두 번째 키워드(예: 대전말티푸분양)나 추가 키워드가 있다면, 첫 번째 메인 키워드 뒤에 자연스러운 수식어와 함께 조화롭게 배치하세요 (예: "대전강아지분양 및 대전말티푸분양 고민 해결을 위한 퍼피댕 가이드").
+   - **중요**: 홍보성 - 정보 제공형일 경우 제목 끝에 "방문 후기"라는 단어를 절대 강제 붙이지 마세요. 자연스러운 정보성/가이드형 문장으로 구성하세요.
    - 절대 "제목:", "Title:" 등의 접두사를 붙이지 마세요.
 4. **절대 금지**: "SEO", "AEO", "GEO", "최적화", "알고리즘", "ID", "시드", "코드" 등 마케팅 메타 용어 절대 출력 금지.
 5. **강조 스타일**: 중요 포인트는 **bold** 형태 적용.
@@ -503,16 +504,16 @@
         userPrompt = `[반려동물 정보성 네이버 블로그 원고 작성 요청]
 - 블로그/상호명: ${companyName}
 - 카테고리: ${petCategory}
-- 타겟 키워드: ${keywords} (첫 번째 키워드가 제목 맨 앞에 반드시 와야 함)
+- 타겟 키워드: ${keywords} (첫 번째 메인 키워드가 제목 맨 앞에 반드시 와야 함)
 - 세부 가이드 내용: ${details || '보호자들이 실수하기 쉬운 점과 실제적인 해결 팁 안내'}
 - 어조/말투: ${tone}
 - 본문 공백 제외 2,200자 ~ 2,400자 분량 엄수 및 소제목(>), 구분선(---), 볼드체(**) 적용.`;
       } else {
-        const promoTypeStr = promoStyle === 'review' ? '내돈내산 솔직 방문/이용 후기 스타일' : '유용한 정보를 제공하면서 매장의 강점을 자연스럽게 녹이는 정보형 홍보 스타일';
+        const promoTypeStr = promoStyle === 'review' ? '내돈내산 솔직 방문/이용 후기 스타일' : '방문 후기라는 단어 대신, 유용한 정보와 필수 체크리스트, 전문적인 가이드를 제공하면서 매장의 강점을 자연스럽게 녹이는 정보 제공형 홍보 스타일';
         userPrompt = `[반려동물 업체/매장 홍보성 네이버 블로그 원고 작성 요청]
 - 업체/상호명: ${companyName}
 - 홍보 스타일: ${promoTypeStr}
-- 타겟 키워드: ${keywords} (첫 번째 키워드가 제목 맨 앞에 반드시 와야 함)
+- 타겟 키워드: ${keywords} (첫 번째 메인 키워드가 제목 맨 앞에 반드시 와야 하며, 입력된 다른 키워드들도 제목 내에 자연스럽게 녹여낼 것)
 - 업체 강점/특장점: ${details || '친절함, 전문성, 위생 관리 및 만족도 강조'}
 - 어조/말투: ${tone}
 - 본문 공백 제외 2,200자 ~ 2,400자 분량 엄수 및 소제목(>), 구분선(---), 볼드체(**) 적용.`;
