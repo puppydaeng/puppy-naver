@@ -90,7 +90,15 @@
 
             <div>
               <label for="infoKeywords" class="block text-sm font-semibold text-slate-700 mb-1">타겟 키워드 (쉼표 구분)</label>
-              <input type="text" id="infoKeywords" placeholder="강아지 분리불안 훈련, 강아지 짖음 원인" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
+              <input type="text" id="infoKeywords" placeholder="대전강아지분양, 대전말티푸분양" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
+            </div>
+
+            <!-- 정보성 제목 상호명 포함 여부 체크박스 -->
+            <div class="flex items-center gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200">
+              <input type="checkbox" id="includeCompanyInTitleInfo" class="w-4 h-4 text-[#b3815a] rounded border-slate-300 focus:ring-[#b3815a]" checked>
+              <label for="includeCompanyInTitleInfo" class="text-xs font-semibold text-slate-700 cursor-pointer">
+                제목에 블로그/상호명(퍼피댕 등) 포함하기
+              </label>
             </div>
 
             <div>
@@ -121,7 +129,15 @@
 
             <div>
               <label for="promoKeywords" class="block text-sm font-semibold text-slate-700 mb-1">홍보 타겟 키워드 (쉼표 구분)</label>
-              <input type="text" id="promoKeywords" placeholder="예: 대전강아지분양, 대전말티푸분양" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
+              <input type="text" id="promoKeywords" placeholder="대전강아지분양, 대전말티푸분양" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
+            </div>
+
+            <!-- 홍보성 제목 상호명 포함 여부 체크박스 -->
+            <div class="flex items-center gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200">
+              <input type="checkbox" id="includeCompanyInTitlePromo" class="w-4 h-4 text-[#b3815a] rounded border-slate-300 focus:ring-[#b3815a]" checked>
+              <label for="includeCompanyInTitlePromo" class="text-xs font-semibold text-slate-700 cursor-pointer">
+                제목에 업체명/브랜드명(퍼피댕 등) 포함하기
+              </label>
             </div>
 
             <div>
@@ -185,11 +201,11 @@
             </div>
           </div>
 
-          <!-- 로딩 상태 표시 -->
+          <!-- 스트리밍/로딩 상태 표시 -->
           <div id="loadingState" class="hidden flex-1 flex flex-col items-center justify-center p-8 text-center">
             <div class="w-12 h-12 border-4 border-[#f3e9de] border-t-[#b3815a] rounded-full animate-spin mb-4"></div>
-            <p class="font-semibold text-slate-700">고유 원고 및 네이버 블로그 최적화 원고 생성 중...</p>
-            <p class="text-xs text-slate-400 mt-1">인용구 소제목, 문단 구분선, 2200~2400자 완벽 맞춤, 포인트 강조 및 #태그 10개를 정교하게 생성하고 있습니다.</p>
+            <p class="font-semibold text-slate-700">SEO·AEO·GEO 전문 원고 생성 중...</p>
+            <p class="text-xs text-slate-400 mt-1">인용구 소제목, 문단 구분선, 2200~2400자 완벽 맞춤, 하이라이트 및 #태그 10개를 정교하게 생성하고 있습니다.</p>
           </div>
 
           <!-- 빈 상태 -->
@@ -221,29 +237,23 @@
 
     const categoryPresets = {
       "🎓 교육 & 훈련 / 행동 교정 (입질, 배변, 분리불안, 짖음 등)": [
-        { keywords: "강아지 분리불안 훈련, 강아지 짖음 원인, 켄넬 훈련법", details: "- 외출 전후 과도한 인사 자제하기 (5분 원칙 실천)\n- 켄넬을 안전한 독립 공간으로 인식시키는 행동교정 기법\n- 분리불안 완화를 위한 노즈워크 및 노포인팅 훈련 팁" },
-        { keywords: "강아지 입질 교정, 새끼강아지 물어뜯는 이유, 강아지 이갈이", details: "- 이갈이 시기 잇몸 통증 완화를 위한 터그놀이 및 우드ส틱 활용\n- 손이나 발을 물었을 때 단호한 거절 반응과 대체 장난감 제공법\n- 습관성 입질 방지를 위한 에너지 소모 산책 가이드" },
-        { keywords: "강아지 배변훈련 성공법, 성견 배변 실수 원인, 강아지 배변패드 위치", details: "- 배변 장소 선정 기준 및 칭찬 중심의 보상 타이밍 설정\n- 잦은 실수 시 냄새 제거 처리 방법 및 징벌 훈련의 위험성\n- 스트레스 및 질환으로 인한 일시적 배변 실수 구별법" },
-        { keywords: "강아지 외부소리 짖음, 층간소음 강아지 훈련, 둔감화 훈련", details: "- 현관문 소리, 벨소리에 민감하게 짖는 원인 분석\n- 벨소리 녹음본을 활용한 단계별 둔감화 및 긍정 강화 보상 기법\n- 이웃 간 층간소음 갈등 줄이기 위한 집안 환경 조성 노하우" }
+        { keywords: "대전강아지분양, 대전말티푸분양", details: "- 외출 전후 과도한 인사 자제하기 (5분 원칙 실천)\n- 켄넬을 안전한 독립 공간으로 인식시키는 행동교정 기법\n- 분리불안 완화를 위한 노즈워크 및 노포인팅 훈련 팁" },
+        { keywords: "대전강아지분양, 대전미니비숑분양", details: "- 이갈이 시기 잇몸 통증 완화를 위한 터그놀이 및 우드스틱 활용\n- 손이나 발을 물었을 때 단호한 거절 반응과 대체 장난감 제공법\n- 습관성 입질 방지를 위한 에너지 소모 산책 가이드" }
       ],
       "🏥 건강 & 질병 / 증상 (슬개골, 피부병, 설사, 예방접종 등)": [
-        { keywords: "강아지 슬개골 탈구 증상, 강아지 다리 절뚝거림, 소형견 슬개골 관리", details: "- 슬개골 탈구 1~4단계별 초기 증상과 보호자 체크리스트\n- 가정 내 미끄럼 방지 매트 설치 및 발바닥 털 관리 필수성\n- 관절 영양제 복용 및 관절에 무리를 주지 않는 적정 체중 관리법" },
-        { keywords: "강아지 설사 이유, 강아지 붉은 변, 강아지 유산균 급여", details: "- 단순 과식/사료 변경에 의한 설사와 바이러스성 감염 설사 구분법\n- 설사 시 임시 금식 수분 보충 요령 및 병원 방문 판단 기준\n- 장 건강을 위한 반려견 전용 프로바이오틱스 영양제 선택 가이드" },
-        { keywords: "강아지 아토피 피부염, 강아지 귓병 증상, 강아지 긁는 이유", details: "- 식이 알레르기 및 환경성 아토피의 구별법과 사료 테스트\n- 귀 청소 주기 및 귓속 털 정리 시 주의할 점\n- 피부 장벽 강화를 위한 약용 샴푸 및 탄산스파 활용법" }
+        { keywords: "대전강아지분양, 대전푸들분양", details: "- 슬개골 탈구 1~4단계별 초기 증상과 보호자 체크리스트\n- 가정 내 미끄럼 방지 매트 설치 및 발바닥 털 관리 필수성\n- 관절 영양제 복용 및 관절에 무리를 주지 않는 적정 체중 관리법" }
       ],
       "🥗 영양 & 급여 / 음식 (먹어도 되는 음식, 금지 음식, 화식 등)": [
-        { keywords: "강아지 블루베리 먹어도 될까, 강아지 과일 급여량, 강아지 항산화 음식", details: "- 블루베리의 영양 성분(안토시아닌)과 눈 건강 개선 효과\n- 급여 시 씨앗/줄기 제거 및 목풔침 방지를 위한 주의사항\n- 하루 권장 칼로리의 10% 이내 적정 급여량 가이드" },
-        { keywords: "강아지 먹으면 안되는 음식, 강아지 양파 중독, 강아지 포도 위험성", details: "- 포도, 양파, 초콜릿, 자일리톨 등 치명적 중독 유발 음식 정리\n- 섭취 시 즉각적인 응급 처치 요령 및 동물병원 내원 필수성\n- 사람 음식 나눔 시 췌장염 유발 위험 및 위험 요소 알리기" }
+        { keywords: "대전강아지분양, 대전포메라니안분양", details: "- 블루베리의 영양 성분(안토시아닌)과 눈 건강 개선 효과\n- 급여 시 씨앗/줄기 제거 및 목풔침 방지를 위한 주의사항\n- 하루 권장 칼로리의 10% 이내 적정 급여량 가이드" }
       ],
       "✂️ 미용 & 위생 / 케어 (발톱, 빗질, 목욕, 귀 청소, 털 관리 등)": [
-        { keywords: "강아지 발톱 깎는법, 강아지 혈관 자르기 응급처치, 강아지 발톱 케어", details: "- 검은 발톱 혈관 확인 방법 및 거부감 줄이는 긍정 강화 훈련\n- 발톱 자르는 각도와 혈관 잘렸을 때 퀵스탑(지혈제) 사용법\n- 방치 시 걸음걸이 불균형 및 관절 질환 유발 위험성 설명" },
-        { keywords: "강아지 목욕 주기, 강아지 샴푸 추천, 강아지 드라이룸 적응", details: "- 강아지 피부 주기(약 3~4주)에 맞춘 적정 목욕 횟수 안내\n- 눈과 귀에 물이 들어가지 않게 씻기는 팁 및 적정 온수 온도\n- 드라이어로 속털까지 바짝 말려 피부병 예방하기" }
+        { keywords: "대전강아지분양, 대전비숑분양", details: "- 검은 발톱 혈관 확인 방법 및 거부감 줄이는 긍정 강화 훈련\n- 발톱 자르는 각도와 혈관 잘렸을 때 퀵스탑(지혈제) 사용법\n- 방치 시 걸음걸이 불균형 및 관절 질환 유발 위험성 설명" }
       ],
       "✈️ 용품 & 동반 장소 / 여행 (애동카, 애견펜션, 하네스, 펫용품 등)": [
-        { keywords: "애견동반 펜션 추천, 강아지 여행 준비물 checklist, 애견동반 수영장", details: "- 애견동반 숙소 예약 시 사전 확인해야 할 체크리스트(펜스, 무게 제한 등)\n- 차 멀미 예방을 위한 탑승 전 금식 및 카시트 안전벨트 적응\n- 멀미약 및 펫티켓(입마개, 배변봉투, 매너벨트) 필수 챙기기" }
+        { keywords: "대전강아지분양, 대전애견동반", details: "- 애견동반 숙소 예약 시 사전 확인해야 할 체크리스트(펜스, 무게 제한 등)\n- 차 멀미 예방을 위한 탑승 전 금식 및 카시트 안전벨트 적응\n- 멀미약 및 펫티켓(입마개, 배변봉투, 매너벨트) 필수 챙기기" }
       ],
       "🐾 견종별 특징 & 행동 상식 (견종별 성격, 수명, 특징 등)": [
-        { keywords: "포메라니안 특징, 포메 털 빠짐 털갈이, 곰돌이컷 주의사항", details: "- 포메라니안의 대표적 유전 질환(슬개골, 기관지 협착증) 케어법\n- 이중모 특성에 따른 털갈이 시기 케어 및 알로페시아 주의\n- 활발하고 도도한 성격에 맞춘 긍정적 교감 및 운동량 채우기" }
+        { keywords: "대전강아지분양, 대전말티푸분양", details: "- 포메라니안의 대표적 유전 질환(슬개골, 기관지 협착증) 케어법\n- 이중모 특성에 따른 털갈이 시기 케어 및 알로페시아 주의\n- 활발하고 도도한 성격에 맞춘 긍정적 교감 및 운동량 채우기" }
       ]
     };
 
@@ -253,20 +263,8 @@
       const presets = categoryPresets[selectedCategory];
 
       if (presets && presets.length > 0) {
-        let randomIndex;
-        const lastIndex = lastPresetIndexes[selectedCategory];
-
-        if (presets.length > 1 && lastIndex !== undefined) {
-          do {
-            randomIndex = Math.floor(Math.random() * presets.length);
-          } while (randomIndex === lastIndex);
-        } else {
-          randomIndex = Math.floor(Math.random() * presets.length);
-        }
-
-        lastPresetIndexes[selectedCategory] = randomIndex;
+        let randomIndex = Math.floor(Math.random() * presets.length);
         const preset = presets[randomIndex];
-
         document.getElementById('infoKeywords').value = preset.keywords;
         document.getElementById('infoDetails').value = preset.details;
       }
@@ -372,7 +370,7 @@
           const blobText = new Blob([textContent], { type: 'text/plain' });
           const data = [new ClipboardItem({ 'text/html': blobHtml, 'text/plain': blobText })];
           await navigator.clipboard.write(data);
-          showToast('네이버 블로그 맞춤형 서식(인용구·색상·구분선)이 복사되었습니다!');
+          showToast('네이버 블로그 맞춤형 서식(인용구·배경색·구분선)이 복사되었습니다!');
           return;
         }
       } catch (err) {
@@ -397,7 +395,7 @@
         document.body.removeChild(tempDiv);
         
         if (successful) {
-          showToast('네이버 블로그 맞춤형 서식(인용구·색상·구분선)이 복사되었습니다!');
+          showToast('네이버 블로그 맞춤형 서식(인용구·배경색·구분선)이 복사되었습니다!');
           return;
         }
       } catch (fallbackErr) {
@@ -448,15 +446,18 @@
       let details = "";
       let petCategory = "";
       let promoStyle = "review";
+      let includeCompanyInTitle = true;
 
       if (postType === 'info') {
         petCategory = document.getElementById('petCategory').value;
         keywords = document.getElementById('infoKeywords').value.trim();
         details = document.getElementById('infoDetails').value.trim();
+        includeCompanyInTitle = document.getElementById('includeCompanyInTitleInfo').checked;
       } else {
         promoStyle = document.querySelector('input[name="promoStyle"]:checked').value;
         keywords = document.getElementById('promoKeywords').value.trim();
         details = document.getElementById('promoDetails').value.trim();
+        includeCompanyInTitle = document.getElementById('includeCompanyInTitlePromo').checked;
       }
 
       if (!companyName || !keywords) {
@@ -475,25 +476,27 @@
       document.getElementById('generateBtn').disabled = true;
 
       const personas = [
-        "3년 차 말티푸를 키우며 실수와 시행착오 끝에 실전 노하우를 깨달은 30대 반려인",
-        "수의학과 행동학 관련 서적 및 세미나를 매일 탐독하는 꼼꼼한 5년 차 댕댕이 반려인",
-        "노령견 포메라니안을 케어하며 건강과 미용, 식단 관리에 매우 예민하고 세심한 반려인",
-        "비숑프리제 두 마리를 다견 가정으로 키우며 매일 산책과 훈련 일지를 기록하는 라이프스타일 블로거"
+        "3년 차 반려견을 키우며 실수와 시행착오 끝에 실전 노하우를 깨달은 30대 반려인",
+        "수의학과 행동학 관련 서적 및 세미나를 탐독하는 꼼꼼한 5년 차 댕댕이 반려인",
+        "노령견을 케어하며 건강과 미용, 식단 관리에 매우 예민하고 세심한 반려인",
+        "다견 가정으로 키우며 매일 산책과 훈련 일지를 기록하는 라이프스타일 블로거"
       ];
       const randomPersona = personas[Math.floor(Math.random() * personas.length)];
       const randomSituation = "최근 소셜 미디어나 단톡방에서 보호자들이 자주 묻는 가장 현실적인 고민 사례를 접했을 때";
+      const uniqueSeed = "ID:" + Math.random().toString(36).substring(2, 15);
 
-      const systemInstruction = `당신은 1차적으로 **SEO · AEO · GEO 전문 반려동물 콘텐츠 마케터**입니다.
+      const systemInstruction = `당신은 1차적으로 **SEO · AEO · GEO 전문 반려동물 콘텐츠 마케터**입니다. [식별코드:${uniqueSeed}]
 [핵심 작성 규정 및 메타 문자 출력 금지]
 1. 작성자 서사 페르소나: ${randomPersona}
 2. 작성 상황 배경: ${randomSituation}
 3. **원고 제목 작성 규칙**: 
-   - 원고 맨 첫 줄에 # 기호를 붙여 H2 사이즈 제목으로 작성하세요 (예: # 타겟키워드 포함된 제목).
-   - **중요 키워드 배치 규칙**: 사용자가 입력한 키워드들(쉼표로 구분됨) 중 첫 번째 메인 키워드(예: 대전강아지분양)는 **반드시 제목의 맨 처음에 시작**되어야 합니다. 만약 쉼표로 구분된 두 번째 키워드(예: 대전말티푸분양)나 추가 키워드가 있다면, 첫 번째 메인 키워드 뒤에 자연스러운 수식어와 함께 조화롭게 배치하세요 (예: "대전강아지분양 및 대전말티푸분양 고민 해결을 위한 퍼피댕 가이드").
-   - **중요**: 홍보성 - 정보 제공형일 경우 제목 끝에 "방문 후기"라는 단어를 절대 강제 붙이지 마세요. 자연스러운 정보성/가이드형 문장으로 구성하세요.
+   - 원고 맨 첫 줄에 # 기호를 붙여 H2 사이즈 제목으로 작성하세요 (예: # 대전강아지분양 선택 가이드).
+   - **키워드 배치 규칙**: 사용자가 입력한 키워드들(예: 대전강아지분양, 대전말티푸분양) 중 **첫 번째 메인 키워드는 반드시 제목의 맨 처음에 시작**되어야 합니다. 만약 여러 키워드가 있다면 제목 내에 자연스럽고 흐름에 맞게 배치하세요.
+   - **업체명 제목 포함 여부 규칙**: 
+     ${includeCompanyInTitle ? `- 사용자가 제목에 상호명 포함을 원하므로, 제목 내에 자연스럽게 '${companyName}'을(를) 포함하세요.` : `- 사용자가 제목에 상호명 포함을 원하지 않으므로, 제목에 '${companyName}' 등 상호명/업체명을 절대로 넣지 마세요.`}
    - 절대 "제목:", "Title:" 등의 접두사를 붙이지 마세요.
-4. **절대 금지**: "SEO", "AEO", "GEO", "최적화", "알고리즘", "ID", "시드", "코드" 등 마케팅 메타 용어 절대 출력 금지.
-5. **강조 스타일**: 중요 포인트는 **bold** 형태 적용.
+4. **절대 금지**: "SEO", "AEO", "GEO", "최적화", "알고리즘", "ID", "시드", "코드", "식별코드" 등 마케팅 메타 용어 절대 출력 금지.
+5. **강조 스타일**: 중요 포인트는 **bold** 형태로 작성.
 6. **소제목 서식 규칙**: 소제목은 반드시 \`> 소제목 내용\` (마크다운 인용구 기호) 형태로 작성하세요.
 7. **구분선 규칙**: 주요 주제 문단 사이에는 \`---\` 마크다운 구분선을 삽입하세요.
 8. 글자 수: **본문 내용 기준 공백 제외 반드시 2,200자 ~ 2,400자 사이**로 풍부하고 정성을 다해 작성하세요.
@@ -509,11 +512,11 @@
 - 어조/말투: ${tone}
 - 본문 공백 제외 2,200자 ~ 2,400자 분량 엄수 및 소제목(>), 구분선(---), 볼드체(**) 적용.`;
       } else {
-        const promoTypeStr = promoStyle === 'review' ? '내돈내산 솔직 방문/이용 후기 스타일' : '방문 후기라는 단어 대신, 유용한 정보와 필수 체크리스트, 전문적인 가이드를 제공하면서 매장의 강점을 자연스럽게 녹이는 정보 제공형 홍보 스타일';
+        const promoTypeStr = promoStyle === 'review' ? '내돈내산 솔직 방문/이용 후기 스타일' : '방문 후기라는 단어 사용 금지, 유용한 정보와 필수 체크리스트 및 가이드를 제공하면서 매장의 강점을 자연스럽게 녹이는 정보 제공형 홍보 스타일';
         userPrompt = `[반려동물 업체/매장 홍보성 네이버 블로그 원고 작성 요청]
 - 업체/상호명: ${companyName}
 - 홍보 스타일: ${promoTypeStr}
-- 타겟 키워드: ${keywords} (첫 번째 메인 키워드가 제목 맨 앞에 반드시 와야 하며, 입력된 다른 키워드들도 제목 내에 자연스럽게 녹여낼 것)
+- 타겟 키워드: ${keywords} (첫 번째 메인 키워드가 제목 맨 앞에 반드시 와야 하며, 입력된 다른 키워드들도 자연스럽게 녹여낼 것)
 - 업체 강점/특장점: ${details || '친절함, 전문성, 위생 관리 및 만족도 강조'}
 - 어조/말투: ${tone}
 - 본문 공백 제외 2,200자 ~ 2,400자 분량 엄수 및 소제목(>), 구분선(---), 볼드체(**) 적용.`;
