@@ -64,7 +64,7 @@
           <!-- 공통: 업체명 / 브랜드명 / 블로그명 -->
           <div>
             <label for="companyName" class="block text-sm font-semibold text-slate-700 mb-1" id="companyLabel">블로그명 / 상호명</label>
-            <input type="text" id="companyName" required placeholder="예:퍼피댕,퍼피댕청주점,퍼피댕천안점" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
+            <input type="text" id="companyName" required placeholder="예:퍼피댕,퍼피댕OO점,퍼피댕OO,OO퍼피댕" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
           </div>
 
           <!-- [정보성 전용 영역] -->
@@ -110,14 +110,14 @@
                   <input type="radio" name="promoStyle" value="review" class="peer sr-only" checked>
                   <div class="p-2.5 text-center rounded-xl border border-slate-200 peer-checked:border-[#b3815a] peer-checked:bg-[#fbf7f3] peer-checked:text-[#b3815a] hover:bg-slate-50 transition text-xs font-semibold">
                     <i class="fa-solid fa-heart mb-1 block text-sm"></i>
-                    이용후기형
+                    이용 후기형
                   </div>
                 </label>
                 <label class="cursor-pointer">
                   <input type="radio" name="promoStyle" value="info" class="peer sr-only">
                   <div class="p-2.5 text-center rounded-xl border border-slate-200 peer-checked:border-[#b3815a] peer-checked:bg-[#fbf7f3] peer-checked:text-[#b3815a] hover:bg-slate-50 transition text-xs font-semibold">
                     <i class="fa-solid fa-lightbulb mb-1 block text-sm"></i>
-                    정보제공형홍보
+                    정보 제공형 홍보
                   </div>
                 </label>
               </div>
@@ -126,7 +126,7 @@
             <!-- 핵심 키워드 -->
             <div>
               <label for="promoKeywords" class="block text-sm font-semibold text-slate-700 mb-1">홍보 타겟 키워드 (쉼표 구분)</label>
-              <input type="text" id="promoKeywords" placeholder="예: 강남 강아지 미용실, 강남 애견 유치원 추천" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
+              <input type="text" id="promoKeywords" placeholder="예: OO강아지분양, OO애견분양 등" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
             </div>
 
             <!-- 강점 / 특장점 -->
@@ -163,7 +163,7 @@
           <!-- 제출 버튼 -->
           <button type="submit" id="generateBtn" class="w-full py-3.5 px-4 bg-[#b3815a] hover:bg-[#9a6e4b] text-white font-bold rounded-xl shadow-md hover:shadow-lg transition flex items-center justify-center gap-2">
             <i class="fa-solid fa-wand-magic-sparkles"></i>
-            <span>맞춤형 원고 자동 생성하기</span>
+            <span>원고 자동 생성하기</span>
           </button>
         </form>
       </section>
@@ -178,8 +178,8 @@
               <h2 class="text-lg font-bold text-slate-900">생성된 원고</h2>
               <!-- 보기 모드 탭 -->
               <div class="ml-2 inline-flex p-1 bg-slate-100 rounded-lg text-xs font-medium">
-                <button type="button" id="tabRawBtn" onclick="switchTab('raw')" class="px-3 py-1 rounded-md bg-white text-slate-800 shadow-sm transition">블로그용 (기호 제거)</button>
-                <button type="button" id="tabPreviewBtn" onclick="switchTab('preview')" class="px-3 py-1 rounded-md text-slate-500 hover:text-slate-800 transition">서식 미리보기</button>
+                <button type="button" id="tabRawBtn" onclick="switchTab('raw')" class="px-3 py-1 rounded-md text-slate-500 hover:text-slate-800 transition">일반 텍스트</button>
+                <button type="button" id="tabPreviewBtn" onclick="switchTab('preview')" class="px-3 py-1 rounded-md bg-white text-slate-800 shadow-sm transition font-semibold">서식 미리보기 (네이버 복사용)</button>
               </div>
             </div>
             
@@ -194,9 +194,9 @@
               </div>
               
               <!-- 복사 버튼 -->
-              <button onclick="copyToClipboard()" id="copyBtn" disabled class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-lg transition flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed">
-                <i class="fa-regular fa-copy"></i>
-                <span>복사하기</span>
+              <button onclick="copyToClipboard()" id="copyBtn" disabled class="px-4 py-2 bg-[#b3815a] hover:bg-[#9a6e4b] text-white text-xs font-bold rounded-lg transition flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm">
+                <i class="fa-solid fa-copy"></i>
+                <span>네이버 블로그 서식 복사</span>
               </button>
             </div>
           </div>
@@ -216,10 +216,10 @@
 
           <!-- 결과 출력 에디터 -->
           <div id="outputContainer" class="hidden flex-1 flex flex-col mt-4">
-            <textarea id="resultTextarea" oninput="updateCharCount()" class="w-full flex-1 p-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#b3815a] font-sans text-slate-800 text-sm leading-relaxed resize-none min-h-[500px]" placeholder="생성된 원고가 이곳에 표시됩니다. 자유롭게 수정할 수 있습니다."></textarea>
+            <textarea id="resultTextarea" oninput="updateCharCount()" class="hidden w-full flex-1 p-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#b3815a] font-sans text-slate-800 text-sm leading-relaxed resize-none min-h-[500px]" placeholder="생성된 원고가 이곳에 표시됩니다. 자유롭게 수정할 수 있습니다."></textarea>
             
-            <!-- HTML 서식 미리보기 뷰 -->
-            <div id="previewContainer" class="hidden w-full flex-1 p-6 bg-white border border-slate-200 rounded-xl overflow-y-auto min-h-[500px] text-slate-800 text-sm leading-relaxed space-y-4"></div>
+            <!-- HTML 서식 미리보기 뷰 (네이버 블로그 호환 인라인 스타일 적용) -->
+            <div id="previewContainer" class="w-full flex-1 p-6 bg-white border border-slate-200 rounded-xl overflow-y-auto min-h-[500px] text-slate-800 text-sm leading-relaxed space-y-4"></div>
           </div>
         </div>
       </section>
@@ -319,7 +319,6 @@
     function updateCharCount() {
       const textarea = document.getElementById('resultTextarea');
       const text = textarea.value || "";
-      
       const noSpaceLength = text.replace(/\s/g, '').length;
       const withSpaceLength = text.length;
 
@@ -329,9 +328,9 @@
 
     function cleanMarkdownForBlog(text) {
       return text
-        .replace(/\[ID:[^\]]+\]/g, '') // ID값 제거
-        .replace(/AEO\/GEO 최적화|AEO|GEO|SEO 최적화/g, '') // 전문 용어 본문 출력 제거
-        .replace(/^제목:\s*/gim, '') // '제목:' 문자열 자동 제거
+        .replace(/\[ID:[^\]]+\]/g, '')
+        .replace(/AEO\/GEO 최적화|AEO|GEO|SEO 최적화/g, '')
+        .replace(/^제목:\s*/gim, '')
         .replace(/^> \s*(.*$)/gim, '\n[ "$1" ]\n')
         .replace(/^###?\s*(.*$)/gim, '\n[ "$1" ]\n')
         .replace(/\*\*(.*?)\*\*/g, '$1')
@@ -342,6 +341,7 @@
         .trim();
     }
 
+    // 네이버 블로그 에디터(SmartEditor ONE)에서 색상과 인용구, 구분선이 그대로 살아나도록 인라인 스타일(inline-style) 강화
     function renderMarkdownToHtml(text) {
       const clean = text
         .replace(/\[ID:[^\]]+\]/g, '')
@@ -349,12 +349,12 @@
         .replace(/^제목:\s*/gim, '');
 
       return clean
-        .replace(/^# (.*$)/gim, '<h2 class="text-xl font-black text-slate-900 pb-3 mb-4 border-b-2 border-[#b3815a] flex items-center gap-2"><i class="fa-solid fa-heading text-[#b3815a] text-base"></i> $1</h2>')
-        .replace(/^## (.*$)/gim, '<h2 class="text-xl font-black text-slate-900 pb-3 mb-4 border-b-2 border-[#b3815a] flex items-center gap-2"><i class="fa-solid fa-heading text-[#b3815a] text-base"></i> $1</h2>')
-        .replace(/^> (.*$)/gim, '<blockquote class="p-4 my-4 border-l-4 border-[#b3815a] bg-[#fbf7f3] rounded-r-lg text-[#5c3e26] font-bold text-base shadow-sm font-serif">“ $1 ”</blockquote>')
-        .replace(/^### (.*$)/gim, '<blockquote class="p-3 my-3 border-l-4 border-[#b3815a] bg-slate-100 rounded-r-lg text-slate-900 font-bold text-base">“ $1 ”</blockquote>')
-        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-[#8c6243] bg-[#f3e9de] px-1.5 py-0.5 rounded text-sm">$1</strong>')
-        .replace(/^---$/gim, '<div class="my-6 border-t-2 border-dashed border-[#e2ba93]"></div>')
+        .replace(/^# (.*$)/gim, '<h2 style="font-size: 20px; font-weight: 900; color: #1e293b; padding-bottom: 12px; margin-bottom: 16px; border-bottom: 2px solid #b3815a;">$1</h2>')
+        .replace(/^## (.*$)/gim, '<h2 style="font-size: 20px; font-weight: 900; color: #1e293b; padding-bottom: 12px; margin-bottom: 16px; border-bottom: 2px solid #b3815a;">$1</h2>')
+        .replace(/^> (.*$)/gim, '<blockquote style="margin: 16px 0; padding: 16px 20px; border-left: 4px solid #b3815a; background-color: #fbf7f3; color: #5c3e26; font-weight: bold; font-size: 15px; border-top-right-radius: 8px; border-bottom-right-radius: 8px;">“ $1 ”</blockquote>')
+        .replace(/^### (.*$)/gim, '<blockquote style="margin: 12px 0; padding: 12px 16px; border-left: 4px solid #b3815a; background-color: #f1f5f9; color: #0f172a; font-weight: bold; font-size: 15px;">“ $1 ”</blockquote>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong style="font-weight: bold; color: #8c6243; background-color: #f3e9de; padding: 2px 6px; border-radius: 4px;">$1</strong>')
+        .replace(/^---$/gim, '<hr style="margin: 24px 0; border: none; border-top: 2px dashed #e2ba93;" />')
         .replace(/\n/g, '<br>');
     }
 
@@ -378,50 +378,54 @@
       }
     }
 
+    // 핵심: 클립보드에 HTML 서식(인라인 색상, 구분선, 인용구 스타일)을 그대로 밀어 넣는 함수
     async function copyToClipboard() {
-      const textarea = document.getElementById('resultTextarea');
       const preview = document.getElementById('previewContainer');
-      const isPreviewTab = !preview.classList.contains('hidden');
+      const textarea = document.getElementById('resultTextarea');
+      
+      const htmlContent = preview.innerHTML || renderMarkdownToHtml(textarea.value);
+      const textContent = preview.innerText || textarea.value;
 
-      if (isPreviewTab) {
-        try {
-          if (navigator.clipboard && window.ClipboardItem) {
-            const htmlContent = preview.innerHTML;
-            const textContent = preview.innerText;
-            const blobHtml = new Blob([htmlContent], { type: 'text/html' });
-            const blobText = new Blob([textContent], { type: 'text/plain' });
-            const data = [new ClipboardItem({ 'text/html': blobHtml, 'text/plain': blobText })];
-            await navigator.clipboard.write(data);
-            showToast('서식(인용구/강조 색상)이 포함된 원고가 복사되었습니다!');
-            return;
-          }
-        } catch (err) {
-          console.warn('Clipboard API fallback:', err);
+      try {
+        if (navigator.clipboard && window.ClipboardItem) {
+          const blobHtml = new Blob([htmlContent], { type: 'text/html' });
+          const blobText = new Blob([textContent], { type: 'text/plain' });
+          const data = [new ClipboardItem({ 'text/html': blobHtml, 'text/plain': blobText })];
+          await navigator.clipboard.write(data);
+          showToast('네이버 블로그 맞춤형 서식(인용구·색상·구분선)이 복사되었습니다!');
+          return;
         }
-
-        try {
-          const range = document.createRange();
-          range.selectNodeContents(preview);
-          const selection = window.getSelection();
-          selection.removeAllRanges();
-          selection.addRange(range);
-          
-          const successful = document.execCommand('copy');
-          selection.removeAllRanges();
-          
-          if (successful) {
-            showToast('서식(인용구/강조 색상)이 포함된 원고가 복사되었습니다!');
-            return;
-          }
-        } catch (fallbackErr) {
-          console.error('Copy Error:', fallbackErr);
-        }
+      } catch (err) {
+        console.warn('Clipboard API fallback:', err);
       }
 
-      if (!textarea.value) return;
-      textarea.select();
-      document.execCommand('copy');
-      showToast('원고가 클립보드에 복사되었습니다! 네이버 블로그에 붙여넣으세요.');
+      // 구형 브라우저 및 iframe 호환용 execCommand 방식
+      try {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = htmlContent;
+        tempDiv.style.position = 'fixed';
+        tempDiv.style.left = '-9999px';
+        document.body.appendChild(tempDiv);
+
+        const range = document.createRange();
+        range.selectNodeContents(tempDiv);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        
+        const successful = document.execCommand('copy');
+        selection.removeAllRanges();
+        document.body.removeChild(tempDiv);
+        
+        if (successful) {
+          showToast('네이버 블로그 맞춤형 서식(인용구·색상·구분선)이 복사되었습니다!');
+          return;
+        }
+      } catch (fallbackErr) {
+        console.error('Copy Error:', fallbackErr);
+      }
+
+      showToast('복사에 실패했습니다. 텍스트를 직접 드래그해서 복사해주세요.');
     }
 
     function showToast(message) {
@@ -508,7 +512,6 @@
       ];
       const randomSituation = situations[Math.floor(Math.random() * situations.length)];
 
-      // 1차 핵심 역할 지정: SEO·AEO·GEO 전문 반려동물 콘텐츠 마케터 (본문 출력 절대 금지 지침 포함)
       const systemInstruction = `당신은 1차적으로 **SEO · AEO · GEO 전문 반려동물 콘텐츠 마케터**입니다.
 검색엔진 최적화, 질문답변 최적화, 지역검색 최적화 알고리즘에 기반한 최고 품질의 블로그 원고를 작성합니다.
 
@@ -517,11 +520,11 @@
 2. 작성 상황 배경: ${randomSituation}
 3. **원고 제목 작성 규칙 (최상단 배치)**: 
    - 원고 맨 첫 줄에 클릭을 부르는 완벽한 네이버 블로그 제목을 작성하세요.
-   - 단, 절대 "제목:", "Title:" 등의 접두사를 붙이지 말고 제목 텍스트만 작성하세요. (예: 대전강아지분양 우리집에서 만나요)
+   - 단, 절대 "제목:", "Title:" 등의 접두사를 붙이지 말고 제목 텍스트만 작성하세요.
    - 제목 뒤에 바로 한 줄 비우고 본문을 시작하세요.
 4. **절대 금지**: "SEO", "AEO", "GEO", "최적화", "알고리즘", "ID", "시드", "코드" 등 전문 용어나 마케팅 메타 용어를 원고 본문에 절대 단 한 글자도 출력하지 마세요. 독자에게 자연스러운 일반 블로그 글로 보여야 합니다.
 5. **강조 스타일**: 보호자가 알아두면 좋은 중요 포인트 및 핵심 꿀팁은 단어/문장 양쪽에 **bold** (예: **중요한 팁**) 형태를 적용해 주세요.
-6. 서론/결론의 정형화된 상투어구 금지 (예: "안녕하세요 오늘은~", "도움이 되셨나요?" 등 사용 절대 금지).
+6. 서론/결론의 정형화된 상투어구 금지.
 7. **소제목 서식 규칙**: 소제목은 반드시 \`> 소제목 내용\` (마크다운 인용구 기호) 형태로 작성하세요.
 8. **구분선 규칙**: 주요 주제 문단 사이에는 \`---\` 마크다운 구분선을 삽입하세요.
 9. 글자 수: **본문 내용 기준 공백 제외 반드시 2,200자 ~ 2,400자 사이**로 풍부하고 정성을 다해 작성하세요.
@@ -587,18 +590,17 @@
           rawMarkdownContent = candidate.content.parts[0].text;
           
           const cleanedText = cleanMarkdownForBlog(rawMarkdownContent);
-          
           const resultTextarea = document.getElementById('resultTextarea');
           resultTextarea.value = cleanedText;
           
-          // 완료 시 자동으로 모래시계 지우고 출력창 노출
           document.getElementById('loadingState').classList.add('hidden');
           document.getElementById('outputContainer').classList.remove('hidden');
           document.getElementById('copyBtn').disabled = false;
           
-          switchTab('raw');
+          // 기본적으로 서식 미리보기 탭이 보이도록 하여 네이버 복사가 바로 가능하게 설정
+          switchTab('preview');
           updateCharCount();
-          showToast('원고 생성이 완벽하게 완료되었습니다!');
+          showToast('원고 생성이 완료되었습니다! [네이버 블로그 서식 복사]를 눌러주세요.');
         } else {
           throw new Error('원고를 생성하지 못했습니다.');
         }
