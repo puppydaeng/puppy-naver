@@ -14,15 +14,15 @@
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen">
-  <nav class="bg-emerald-600 text-white shadow-md">
+  <nav class="bg-[#b3815a] text-white shadow-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
       <div class="flex items-center space-x-3">
-        <i class="fa-solid fa-dog text-2xl text-emerald-200"></i>
+        <i class="fa-solid fa-dog text-2xl text-[#f3e9de]"></i>
         <h1 class="text-xl font-bold tracking-tight">퍼피댕 블로그 원고 생성기</h1>
       </div>
       <div class="flex items-center gap-2">
-        <span class="text-xs bg-emerald-800 px-3 py-1 rounded-full text-emerald-100 font-medium">퍼피댕</span>
-        <span class="text-xs bg-emerald-700 px-3 py-1 rounded-full text-emerald-100">Target: 2200~2400자 (공백제외)</span>
+        <span class="text-xs bg-[#8c6243] px-3 py-1 rounded-full text-[#f3e9de] font-medium">퍼피댕</span>
+        <span class="text-xs bg-[#9a6e4b] px-3 py-1 rounded-full text-[#f3e9de]">Target: 2200~2400자 (공백제외)</span>
       </div>
     </div>
   </nav>
@@ -33,7 +33,7 @@
       <!-- 좌측 설정 폼 -->
       <section class="lg:col-span-5 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit">
         <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-          <i class="fa-solid fa-sliders text-emerald-600"></i> 포스팅 설정
+          <i class="fa-solid fa-sliders text-[#b3815a]"></i> 포스팅 설정
           <span class="text-xs bg-red-100 text-red-700 font-semibold px-2 py-0.5 rounded-full ml-auto">
             <i class="fa-solid fa-shield-halved"></i> 유사문서 100% 방지 적용
           </span>
@@ -46,14 +46,14 @@
             <div class="grid grid-cols-2 gap-3">
               <label class="cursor-pointer">
                 <input type="radio" name="postType" value="info" class="peer sr-only" checked onchange="togglePostTypeUI()">
-                <div class="p-3 text-center rounded-xl border border-slate-200 peer-checked:border-emerald-600 peer-checked:bg-emerald-50 peer-checked:text-emerald-700 hover:bg-slate-50 transition">
+                <div class="p-3 text-center rounded-xl border border-slate-200 peer-checked:border-[#b3815a] peer-checked:bg-[#fbf7f3] peer-checked:text-[#b3815a] hover:bg-slate-50 transition">
                   <i class="fa-solid fa-paw mb-1 block text-lg"></i>
                   <span class="text-sm font-medium">반려동물 정보성</span>
                 </div>
               </label>
               <label class="cursor-pointer">
                 <input type="radio" name="postType" value="promo" class="peer sr-only" onchange="togglePostTypeUI()">
-                <div class="p-3 text-center rounded-xl border border-slate-200 peer-checked:border-emerald-600 peer-checked:bg-emerald-50 peer-checked:text-emerald-700 hover:bg-slate-50 transition">
+                <div class="p-3 text-center rounded-xl border border-slate-200 peer-checked:border-[#b3815a] peer-checked:bg-[#fbf7f3] peer-checked:text-[#b3815a] hover:bg-slate-50 transition">
                   <i class="fa-solid fa-store mb-1 block text-lg"></i>
                   <span class="text-sm font-medium">업체/매장 홍보성</span>
                 </div>
@@ -64,7 +64,7 @@
           <!-- 공통: 업체명 / 브랜드명 / 블로그명 -->
           <div>
             <label for="companyName" class="block text-sm font-semibold text-slate-700 mb-1" id="companyLabel">블로그명 / 상호명</label>
-            <input type="text" id="companyName" required placeholder="예: 퍼피댕,퍼피댕청주점,퍼피댕천안점" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+            <input type="text" id="companyName" required placeholder="예:퍼피댕,퍼피댕청주점,퍼피댕천안점" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
           </div>
 
           <!-- [정보성 전용 영역] -->
@@ -72,12 +72,12 @@
             <!-- 세부 카테고리 선택 -->
             <div>
               <div class="flex justify-between items-center mb-1">
-                <label for="petCategory" class="block text-sm font-semibold text-slate-700">정보성 카테고리</label>
-                <button type="button" onclick="applyRandomCategoryPreset()" class="text-xs bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-semibold px-2.5 py-1 rounded-lg transition flex items-center gap-1">
+                <label for="petCategory" class="block text-sm font-semibold text-slate-700">반려동물 전문 분야 카테고리</label>
+                <button type="button" onclick="applyRandomCategoryPreset()" class="text-xs bg-[#f3e9de] hover:bg-[#e8d8c5] text-[#8c6243] font-semibold px-2.5 py-1 rounded-lg transition flex items-center gap-1">
                   <i class="fa-solid fa-shuffle text-xs"></i> 키워드/가이드 무작위 추천
                 </button>
               </div>
-              <select id="petCategory" onchange="applyCategoryPreset()" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+              <select id="petCategory" onchange="applyCategoryPreset()" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
                 <option value="🎓 교육 & 훈련 / 행동 교정 (입질, 배변, 분리불안, 짖음 등)">🎓 교육 & 훈련 / 행동 교정 (입질, 배변, 분리불안, 짖음 등)</option>
                 <option value="🏥 건강 & 질병 / 증상 (슬개골, 피부병, 설사, 예방접종 등)">🏥 건강 & 질병 / 증상 (슬개골, 피부병, 설사, 예방접종 등)</option>
                 <option value="🥗 영양 & 급여 / 음식 (먹어도 되는 음식, 금지 음식, 화식 등)">🥗 영양 & 급여 / 음식 (먹어도 되는 음식, 금지 음식, 화식 등)</option>
@@ -90,13 +90,13 @@
             <!-- 핵심 주제 / 메인 키워드 -->
             <div>
               <label for="infoKeywords" class="block text-sm font-semibold text-slate-700 mb-1">포스팅 타겟 키워드 (쉼표 구분)</label>
-              <input type="text" id="infoKeywords" placeholder="카테고리 선택 시 자동으로 무작위 설정됩니다." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+              <input type="text" id="infoKeywords" placeholder="카테고리 선택 시 자동으로 무작위 설정됩니다." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
             </div>
 
             <!-- 세부 내용 및 답변 정보 -->
             <div>
               <label for="infoDetails" class="block text-sm font-semibold text-slate-700 mb-1">상세 전달 내용 / 가이드 키포인트</label>
-              <textarea id="infoDetails" rows="4" placeholder="카테고리 선택 시 자동으로 무작위 설정됩니다." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm"></textarea>
+              <textarea id="infoDetails" rows="4" placeholder="카테고리 선택 시 자동으로 무작위 설정됩니다." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm"></textarea>
             </div>
           </div>
 
@@ -108,16 +108,16 @@
               <div class="grid grid-cols-2 gap-3">
                 <label class="cursor-pointer">
                   <input type="radio" name="promoStyle" value="review" class="peer sr-only" checked>
-                  <div class="p-2.5 text-center rounded-xl border border-slate-200 peer-checked:border-emerald-600 peer-checked:bg-emerald-50 peer-checked:text-emerald-700 hover:bg-slate-50 transition text-xs font-semibold">
+                  <div class="p-2.5 text-center rounded-xl border border-slate-200 peer-checked:border-[#b3815a] peer-checked:bg-[#fbf7f3] peer-checked:text-[#b3815a] hover:bg-slate-50 transition text-xs font-semibold">
                     <i class="fa-solid fa-heart mb-1 block text-sm"></i>
-                    솔직 이용 후기형
+                    이용후기형
                   </div>
                 </label>
                 <label class="cursor-pointer">
                   <input type="radio" name="promoStyle" value="info" class="peer sr-only">
-                  <div class="p-2.5 text-center rounded-xl border border-slate-200 peer-checked:border-emerald-600 peer-checked:bg-emerald-50 peer-checked:text-emerald-700 hover:bg-slate-50 transition text-xs font-semibold">
+                  <div class="p-2.5 text-center rounded-xl border border-slate-200 peer-checked:border-[#b3815a] peer-checked:bg-[#fbf7f3] peer-checked:text-[#b3815a] hover:bg-slate-50 transition text-xs font-semibold">
                     <i class="fa-solid fa-lightbulb mb-1 block text-sm"></i>
-                    정보 제공형 홍보
+                    정보제공형홍보
                   </div>
                 </label>
               </div>
@@ -126,7 +126,7 @@
             <!-- 핵심 키워드 -->
             <div>
               <label for="promoKeywords" class="block text-sm font-semibold text-slate-700 mb-1">홍보 타겟 키워드 (쉼표 구분)</label>
-              <input type="text" id="promoKeywords" placeholder="예: OO강아지분양, OO애견분양" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+              <input type="text" id="promoKeywords" placeholder="예: 강남 강아지 미용실, 강남 애견 유치원 추천" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
             </div>
 
             <!-- 강점 / 특장점 -->
@@ -135,14 +135,14 @@
               <textarea id="promoDetails" rows="4" placeholder="예: 
 - 모든견종 분양가15만원부터
 - 강제추가금 없어요
-- 거품없이 만나는 안심분양소" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm"></textarea>
+- 거품없이 만나는 안심분양소" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm"></textarea>
             </div>
           </div>
 
           <!-- 어조 선택 -->
           <div>
             <label for="tone" class="block text-sm font-semibold text-slate-700 mb-1">문체 / 말투</label>
-            <select id="tone" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+            <select id="tone" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
               <option value="친근하고 따뜻한 견주/Expert 블로거 체 (~해요, ~했답니다 🐾)">친근하고 따뜻한 견주 체 (~해요, ~했답니다 🐾)</option>
               <option value="전문적이고 신뢰감 있는 펫 전문가 체 (~합니다, ~입니다 🏥)">전문적인 펫 전문가 체 (~합니다, ~입니다 🏥)</option>
               <option value="생생하고 솔직한 반려견 일상 후기 체 (~했음, ~추천함🐶)">솔직한 반려견 일상 후기 체 (~했음, ~좋았음🐶)</option>
@@ -154,14 +154,14 @@
             <label for="userApiKey" class="block text-sm font-semibold text-slate-700 mb-1">
               Gemini API Key <span class="text-xs font-normal text-slate-500">(Google AI Studio 발급)</span>
             </label>
-            <input type="password" id="userApiKey" placeholder="AI Studio에서 발급받은 API 키 입력 (AIzaSy...)" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm">
+            <input type="password" id="userApiKey" placeholder="AI Studio에서 발급받은 API 키 입력 (AIzaSy...)" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
             <p class="text-xs text-slate-400 mt-1">
-              * 키가 없으시면 <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-emerald-600 underline font-semibold">Google AI Studio</a>에서 무료 발급 후 입력해 주세요.
+              * 키가 없으시면 <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-[#b3815a] underline font-semibold">Google AI Studio</a>에서 무료 발급 후 입력해 주세요.
             </p>
           </div>
 
           <!-- 제출 버튼 -->
-          <button type="submit" id="generateBtn" class="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition flex items-center justify-center gap-2">
+          <button type="submit" id="generateBtn" class="w-full py-3.5 px-4 bg-[#b3815a] hover:bg-[#9a6e4b] text-white font-bold rounded-xl shadow-md hover:shadow-lg transition flex items-center justify-center gap-2">
             <i class="fa-solid fa-wand-magic-sparkles"></i>
             <span>맞춤형 원고 자동 생성하기</span>
           </button>
@@ -174,7 +174,7 @@
           <!-- 상단 툴바 및 글자수 모니터링 -->
           <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-100">
             <div class="flex items-center gap-2">
-              <i class="fa-regular fa-file-lines text-emerald-600 text-xl"></i>
+              <i class="fa-regular fa-file-lines text-[#b3815a] text-xl"></i>
               <h2 class="text-lg font-bold text-slate-900">생성된 원고</h2>
               <!-- 보기 모드 탭 -->
               <div class="ml-2 inline-flex p-1 bg-slate-100 rounded-lg text-xs font-medium">
@@ -187,7 +187,7 @@
               <!-- 글자 수 카운터 -->
               <div class="text-xs bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
                 <span>공백 제외: </span>
-                <strong id="charCountNoSpace" class="text-emerald-600 text-sm">0</strong> / 2400자
+                <strong id="charCountNoSpace" class="text-[#b3815a] text-sm">0</strong> / 2400자
                 <span class="text-slate-400 mx-1">|</span>
                 <span>공백 포함: </span>
                 <span id="charCountWithSpace" class="text-slate-600">0</span>자
@@ -203,8 +203,8 @@
 
           <!-- 콘텐츠 로딩 표시 -->
           <div id="loadingState" class="hidden flex-1 flex flex-col items-center justify-center p-8 text-center">
-            <div class="w-12 h-12 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin mb-4"></div>
-            <p class="font-semibold text-slate-700">고유 원고 및 네이버 블로그 최적화 원고 생성 중...</p>
+            <div class="w-12 h-12 border-4 border-[#f3e9de] border-t-[#b3815a] rounded-full animate-spin mb-4"></div>
+            <p class="font-semibold text-slate-700">네이버 블로그 최적화 원고 생성 중...</p>
             <p class="text-xs text-slate-400 mt-1">인용구 소제목, 문단 구분선, 2200~2400자 완벽 맞춤, 포인트 강조 및 #태그 10개를 정교하게 생성하고 있습니다.</p>
           </div>
 
@@ -216,7 +216,7 @@
 
           <!-- 결과 출력 에디터 -->
           <div id="outputContainer" class="hidden flex-1 flex flex-col mt-4">
-            <textarea id="resultTextarea" oninput="updateCharCount()" class="w-full flex-1 p-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 font-sans text-slate-800 text-sm leading-relaxed resize-none min-h-[500px]" placeholder="생성된 원고가 이곳에 표시됩니다. 자유롭게 수정할 수 있습니다."></textarea>
+            <textarea id="resultTextarea" oninput="updateCharCount()" class="w-full flex-1 p-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#b3815a] font-sans text-slate-800 text-sm leading-relaxed resize-none min-h-[500px]" placeholder="생성된 원고가 이곳에 표시됩니다. 자유롭게 수정할 수 있습니다."></textarea>
             
             <!-- HTML 서식 미리보기 뷰 -->
             <div id="previewContainer" class="hidden w-full flex-1 p-6 bg-white border border-slate-200 rounded-xl overflow-y-auto min-h-[500px] text-slate-800 text-sm leading-relaxed space-y-4"></div>
@@ -229,7 +229,7 @@
 
   <!-- 알림 메시지 토스트 -->
   <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white text-sm px-4 py-3 rounded-xl shadow-lg transition-opacity duration-300 opacity-0 pointer-events-none flex items-center gap-2 z-50">
-    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+    <i class="fa-solid fa-circle-check text-[#e2ba93]"></i>
     <span id="toastMsg">클립보드에 복사되었습니다!</span>
   </div>
 
@@ -349,12 +349,12 @@
         .replace(/^제목:\s*/gim, '');
 
       return clean
-        .replace(/^# (.*$)/gim, '<h2 class="text-xl font-black text-slate-900 pb-3 mb-4 border-b-2 border-emerald-500 flex items-center gap-2"><i class="fa-solid fa-heading text-emerald-600 text-base"></i> $1</h2>')
-        .replace(/^## (.*$)/gim, '<h2 class="text-xl font-black text-slate-900 pb-3 mb-4 border-b-2 border-emerald-500 flex items-center gap-2"><i class="fa-solid fa-heading text-emerald-600 text-base"></i> $1</h2>')
-        .replace(/^> (.*$)/gim, '<blockquote class="p-4 my-4 border-l-4 border-emerald-500 bg-emerald-50/60 rounded-r-lg text-emerald-950 font-bold text-base shadow-sm font-serif">“ $1 ”</blockquote>')
-        .replace(/^### (.*$)/gim, '<blockquote class="p-3 my-3 border-l-4 border-emerald-500 bg-slate-100 rounded-r-lg text-slate-900 font-bold text-base">“ $1 ”</blockquote>')
-        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-emerald-800 bg-emerald-100/90 px-1.5 py-0.5 rounded text-sm">$1</strong>')
-        .replace(/^---$/gim, '<div class="my-6 border-t-2 border-dashed border-emerald-200"></div>')
+        .replace(/^# (.*$)/gim, '<h2 class="text-xl font-black text-slate-900 pb-3 mb-4 border-b-2 border-[#b3815a] flex items-center gap-2"><i class="fa-solid fa-heading text-[#b3815a] text-base"></i> $1</h2>')
+        .replace(/^## (.*$)/gim, '<h2 class="text-xl font-black text-slate-900 pb-3 mb-4 border-b-2 border-[#b3815a] flex items-center gap-2"><i class="fa-solid fa-heading text-[#b3815a] text-base"></i> $1</h2>')
+        .replace(/^> (.*$)/gim, '<blockquote class="p-4 my-4 border-l-4 border-[#b3815a] bg-[#fbf7f3] rounded-r-lg text-[#5c3e26] font-bold text-base shadow-sm font-serif">“ $1 ”</blockquote>')
+        .replace(/^### (.*$)/gim, '<blockquote class="p-3 my-3 border-l-4 border-[#b3815a] bg-slate-100 rounded-r-lg text-slate-900 font-bold text-base">“ $1 ”</blockquote>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-[#8c6243] bg-[#f3e9de] px-1.5 py-0.5 rounded text-sm">$1</strong>')
+        .replace(/^---$/gim, '<div class="my-6 border-t-2 border-dashed border-[#e2ba93]"></div>')
         .replace(/\n/g, '<br>');
     }
 
