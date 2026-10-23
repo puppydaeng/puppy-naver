@@ -179,6 +179,13 @@
                 <i class="fa-solid fa-list-check mr-1"></i>기록 보기
               </button>
             </div>
+            <div class="border-t border-slate-200 pt-3 flex flex-wrap items-center justify-between gap-2">
+              <span class="font-semibold text-slate-700">전체 원고 보관함: <strong id="archiveCount" class="text-[#b3815a]">0</strong>개</span>
+              <button type="button" onclick="openArchiveModal()" class="px-3 py-1.5 rounded-lg bg-[#8c6243] text-white font-semibold hover:bg-[#735036]">
+                <i class="fa-solid fa-box-archive mr-1"></i> 원고 보관함 열기
+              </button>
+            </div>
+            <p class="text-[11px] text-slate-500">원고 전체는 이 브라우저에 자동 저장됩니다. 기기 변경·데이터 삭제에 대비해 보관함에서 정기적으로 백업하세요.</p>
           </div>
 
           <button type="submit" id="generateBtn" class="w-full py-3.5 px-4 bg-[#b3815a] hover:bg-[#9a6e4b] text-white font-bold rounded-xl shadow-md hover:shadow-lg transition flex items-center justify-center gap-2">
@@ -367,10 +374,13 @@
             
             <div class="flex items-center gap-2 flex-wrap">
               <div class="text-xs bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
-                <span>공백 제외: </span>
-                <strong id="charCountNoSpace" class="text-[#b3815a] text-sm">0</strong> / 2500자
+                <span>본문 공백 제외: </span>
+                <strong id="charCountNoSpace" class="text-[#b3815a] text-sm">0</strong> / 2,000~2,500자
               </div>
               
+              <button onclick="saveCurrentArticle()" id="saveArticleBtn" disabled class="px-3 py-2 bg-white text-[#8c6243] border border-[#b3815a] text-xs font-bold rounded-lg disabled:opacity-40">
+                <i class="fa-solid fa-floppy-disk"></i> 수정 원고 저장
+              </button>
               <button onclick="copyToClipboard()" id="copyBtn" disabled class="px-3 py-2 bg-[#b3815a] hover:bg-[#9a6e4b] text-white text-xs font-bold rounded-lg transition flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed">
                 <i class="fa-solid fa-copy"></i>
                 <span>네이버 서식 복사</span>
@@ -383,11 +393,12 @@
             </div>
           </div>
 
+          <div id="validationStatus" class="hidden mt-3 text-xs px-3 py-2 rounded-lg border" role="status"></div>
           <!-- 로딩 상태 -->
           <div id="loadingState" class="hidden flex-1 flex flex-col items-center justify-center p-8 text-center">
             <div class="w-12 h-12 border-4 border-[#f3e9de] border-t-[#b3815a] rounded-full animate-spin mb-4"></div>
             <p class="font-semibold text-slate-700">고유 맞춤 원고 및 썸네일 생성 중...</p>
-            <p class="text-xs text-slate-400 mt-1">유사문서 100%검증 / 공백 제외 2,000~2,500자 맞춤 / 하단 태그 10개 자동 작성 중</p>
+            <p id="generationProgress" class="text-xs text-slate-500 mt-1">저장된 원고와 표현 유사도 및 본문 글자 수 검사 중</p>
           </div>
 
           <!-- 빈 상태 -->
@@ -430,10 +441,33 @@
         <!-- 기록 목록 삽입 영역 -->
       </div>
       <div class="p-3 bg-slate-50 border-t flex justify-between items-center">
-        <button onclick="clearCurrentHistory()" class="text-xs text-red-600 hover:underline font-semibold">
-          <i class="fa-solid fa-trash-can mr-1"></i>이 항목 전체 초기화
+        <button onclick="clearCurrentHistory()" class="text-xs text-red-600 hover:underline font-semibold" title="제목 이력만 초기화됩니다. 원고 보관함 문서는 유지됩니다.">
+          <i class="fa-solid fa-trash-can mr-1"></i>제목 기록 초기화
         </button>
         <button onclick="closeHistoryModal()" class="px-4 py-1.5 bg-slate-800 text-white font-semibold rounded-lg text-xs">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 브라우저 원고 보관함: GitHub 저장소가 아닌 현재 브라우저 IndexedDB 사용 -->
+  <div id="archiveModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-3xl rounded-2xl shadow-xl flex flex-col max-h-[85vh] overflow-hidden">
+      <div class="bg-[#8c6243] text-white p-4 flex justify-between items-center">
+        <h3 class="font-bold"><i class="fa-solid fa-box-archive mr-1"></i> 전체 원고 보관함</h3>
+        <button type="button" onclick="closeArchiveModal()" aria-label="보관함 닫기"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="p-4 space-y-3 overflow-y-auto flex-1">
+        <p class="text-xs text-slate-500">저장된 원고를 불러오고 백업할 수 있습니다. 유사도는 이 보관함에 저장된 원고와 비교한 추정치이며, 외부 네이버 글까지 검사하지 않습니다.</p>
+        <div class="flex flex-wrap gap-2 items-center">
+          <button type="button" onclick="exportArchive()" class="px-3 py-2 rounded-lg bg-slate-800 text-white text-xs font-bold"><i class="fa-solid fa-download mr-1"></i>전체 JSON 백업</button>
+          <button type="button" onclick="document.getElementById('archiveImportFile').click()" class="px-3 py-2 rounded-lg bg-white border border-slate-300 text-slate-700 text-xs font-bold"><i class="fa-solid fa-upload mr-1"></i>백업 불러오기</button>
+          <input type="file" accept="application/json,.json" id="archiveImportFile" class="hidden" onchange="importArchive(event)">
+          <span id="archiveSummary" class="text-xs text-slate-500 ml-auto"></span>
+        </div>
+        <div id="archiveListContainer" class="space-y-2 text-xs"></div>
+      </div>
+      <div class="p-3 border-t bg-slate-50 text-right">
+        <button type="button" onclick="closeArchiveModal()" class="px-4 py-2 rounded-lg bg-slate-800 text-white text-xs font-bold">닫기</button>
       </div>
     </div>
   </div>
@@ -443,6 +477,224 @@
     const INFO_STORAGE_KEY = "puppydaeng_used_info_topics";
     const PROMO_STORAGE_KEY = "puppydaeng_used_promo_topics";
     let activeModalType = "info";
+    let currentArticleId = null;
+    let archiveDbPromise = null;
+    let draftSaveTimer = null;
+    const ARCHIVE_NAME = 'puppydaeng_full_articles_v2';
+    const ARCHIVE_STORE = 'articles';
+    const SIMILARITY_LIMIT = 0.28; // 글자 7개 묶음의 자카드 유사도 28% 이상이면 재작성 요청
+
+    function openArchiveDb() {
+      if (!('indexedDB' in window)) return Promise.reject(new Error('브라우저에 IndexedDB 기능이 없습니다.'));
+      if (!archiveDbPromise) {
+        archiveDbPromise = new Promise((resolve, reject) => {
+          const req = indexedDB.open(ARCHIVE_NAME, 1);
+          req.onupgradeneeded = () => {
+            const db = req.result;
+            if (!db.objectStoreNames.contains(ARCHIVE_STORE)) db.createObjectStore(ARCHIVE_STORE, { keyPath: 'id' });
+          };
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = () => reject(req.error || new Error('원고 저장소를 열 수 없습니다.'));
+          req.onblocked = () => reject(new Error('원고 저장소가 다른 탭에 의해 잠겨 있습니다.'));
+        }).catch(err => { archiveDbPromise = null; throw err; });
+      }
+      return archiveDbPromise;
+    }
+
+    async function archiveGetAll() {
+      const db = await openArchiveDb();
+      return new Promise((resolve,reject) => {
+        const req = db.transaction(ARCHIVE_STORE, 'readonly').objectStore(ARCHIVE_STORE).getAll();
+        req.onsuccess = () => resolve(req.result.sort((a,b) => (b.createdAt || '').localeCompare(a.createdAt || '')));
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function archiveGet(id) {
+      const db = await openArchiveDb();
+      return new Promise((resolve,reject) => {
+        const req = db.transaction(ARCHIVE_STORE, 'readonly').objectStore(ARCHIVE_STORE).get(id);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function archivePut(item) {
+      const db = await openArchiveDb();
+      return new Promise((resolve,reject) => {
+        const req = db.transaction(ARCHIVE_STORE, 'readwrite').objectStore(ARCHIVE_STORE).put(item);
+        req.onsuccess = () => resolve(true);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function archiveDelete(id) {
+      const db = await openArchiveDb();
+      return new Promise((resolve,reject) => {
+        const req = db.transaction(ARCHIVE_STORE, 'readwrite').objectStore(ARCHIVE_STORE).delete(id);
+        req.onsuccess = () => resolve(true);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    function newArticleId() {
+      return crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    }
+
+    function safeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[ch]));
+    }
+
+    // 사용자가 실제로 읽는 본문 분량: 제목, 마지막 해시태그 줄, Markdown 문법 기호 제외
+    function bodyPlainText(markdown) {
+      return String(markdown || '').split(/\r?\n/)
+        .filter(line => !/^#\s+/.test(line.trim()) && !/^(?:#[^\s#]+\s*){2,}$/.test(line.trim()) && !/^\s*[|\-: ]{3,}\s*$/.test(line))
+        .join('\n')
+        .replace(/\*\*|__|[`>*|]/g, '')
+        .replace(/^#{2,6}\s+/gm, '')
+        .replace(/\s+/g, ' ').trim();
+    }
+    function bodyCharCount(markdown) {
+      return bodyPlainText(markdown).replace(/\s/g, '').length;
+    }
+    function shingles(text) {
+      const plain = bodyPlainText(text).normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
+      const set = new Set();
+      for (let i=0; i <= plain.length - 7; i++) set.add(plain.slice(i,i+7));
+      return set;
+    }
+    function shingleSimilarity(a, b) {
+      const aa = shingles(a), bb = shingles(b);
+      if (!aa.size || !bb.size) return 0;
+      let common = 0;
+      for (const gram of aa) if (bb.has(gram)) common++;
+      return common / (aa.size + bb.size - common);
+    }
+    function closestPrevious(markdown, documents) {
+      let best = { score: 0, article: null };
+      for (const article of documents) {
+        if (!article.content) continue;
+        const score = shingleSimilarity(markdown, article.content);
+        if (score > best.score) best = { score, article };
+      }
+      return best;
+    }
+
+    function setValidationStatus(message, warning=false) {
+      const el = document.getElementById('validationStatus');
+      el.textContent = message;
+      el.className = `mt-3 text-xs px-3 py-2 rounded-lg border ${warning ? 'border-amber-300 bg-amber-50 text-amber-900' : 'border-emerald-200 bg-emerald-50 text-emerald-800'}`;
+    }
+    async function updateArchiveCount() {
+      try {
+        const all = await archiveGetAll();
+        document.getElementById('archiveCount').textContent = all.length.toLocaleString();
+      } catch (e) {
+        document.getElementById('archiveCount').textContent = '저장 오류';
+      }
+    }
+    async function openArchiveModal() {
+      document.getElementById('archiveModal').classList.remove('hidden');
+      await renderArchiveModal();
+    }
+    function closeArchiveModal() {
+      document.getElementById('archiveModal').classList.add('hidden');
+    }
+    async function renderArchiveModal() {
+      const el = document.getElementById('archiveListContainer');
+      try {
+        const all = await archiveGetAll();
+        document.getElementById('archiveSummary').textContent = `총 ${all.length}개 저장`;
+        if (!all.length) { el.innerHTML = '<p class="p-5 text-center text-slate-500">아직 저장된 원고가 없습니다. 새 원고를 생성하면 자동 저장됩니다.</p>'; return; }
+        el.innerHTML = all.map(item => `
+          <div class="flex gap-2 justify-between items-center border border-slate-200 bg-slate-50 rounded-xl p-3">
+            <div class="min-w-0 flex-1"><div class="font-bold text-sm text-slate-800 break-words">${safeHtml(item.title || '제목 없음')}</div>
+              <div class="text-slate-500 mt-1">${safeHtml(item.type === 'promo' ? '홍보성' : '정보성')} · ${safeHtml(item.keyword || '자동 선정')} · ${safeHtml((item.createdAt || '').slice(0,16).replace('T',' '))} · ${bodyCharCount(item.content).toLocaleString()}자</div></div>
+            <button type="button" onclick="loadArchivedArticle('${item.id}')" class="shrink-0 px-2.5 py-2 bg-[#8c6243] text-white rounded-lg font-bold">불러오기</button>
+            <button type="button" onclick="deleteArchivedArticle('${item.id}')" class="shrink-0 px-2 py-2 text-red-600 border border-red-200 rounded-lg">삭제</button>
+          </div>`).join('');
+      } catch (e) { el.textContent = `보관함 오류: ${e.message}`; }
+    }
+    async function loadArchivedArticle(id) {
+      try {
+        const item = await archiveGet(id);
+        if (!item) throw new Error('저장된 원고를 찾지 못했습니다.');
+        currentArticleId = id;
+        rawMarkdownContent = item.content;
+        document.getElementById('resultTextarea').value = item.content;
+        document.getElementById('previewContainer').innerHTML = renderMarkdownToHtml(item.content);
+        updateCharCount();
+        updateThumbnailFromTitle(item.content);
+        document.getElementById('emptyState').classList.add('hidden');
+        document.getElementById('loadingState').classList.add('hidden');
+        document.getElementById('outputContainer').classList.remove('hidden');
+        ['copyBtn','copyHtmlBtn','saveArticleBtn'].forEach(id => document.getElementById(id).disabled = false);
+        setValidationStatus(`보관함에서 원고를 불러왔습니다. 본문 ${bodyCharCount(item.content).toLocaleString()}자`, false);
+        closeArchiveModal();
+        showToast('이전 원고를 불러왔습니다.');
+      } catch (e) { alert(`불러오기 실패: ${e.message}`); }
+    }
+    async function deleteArchivedArticle(id) {
+      if (!confirm('이 원고를 보관함에서 삭제할까요? 삭제한 원고는 이후 유사도 검사에서도 제외됩니다.')) return;
+      try {
+        await archiveDelete(id);
+        await renderArchiveModal(); await updateArchiveCount();
+        if (currentArticleId === id) currentArticleId = null;
+      } catch(e) { alert(`삭제 실패: ${e.message}`); }
+    }
+    async function exportArchive() {
+      try {
+        const articles = await archiveGetAll();
+        const data = JSON.stringify({format:'puppydaeng-archive-v1', exportedAt:new Date().toISOString(), articles}, null, 2);
+        const blob = new Blob([data], { type:'application/json;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href=url;
+        a.download = `puppydaeng_archive_${new Date().toISOString().slice(0,10)}.json`;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+        showToast(`원고 ${articles.length}개 백업 파일을 만들었습니다.`);
+      } catch(e) { alert(`백업 실패: ${e.message}`); }
+    }
+    async function importArchive(event) {
+      const input = event.target;
+      const file = input.files?.[0];
+      if (!file) return;
+      try {
+        if (file.size > 25 * 1024 * 1024) throw new Error('파일이 너무 큽니다(최대 25MB).');
+        const json = JSON.parse(await file.text());
+        if (json.format !== 'puppydaeng-archive-v1' || !Array.isArray(json.articles)) throw new Error('퍼피댕 보관함 JSON 형식이 아닙니다.');
+        if (!confirm(`백업 원고 ${json.articles.length}개를 불러올까요? 동일한 ID의 원고는 덮어씁니다.`)) return;
+        let restored=0;
+        for (const article of json.articles) {
+          if (!article || typeof article.content !== 'string' || article.content.length > 100000 || typeof article.id !== 'string' || !/^[a-zA-Z0-9_-]{1,100}$/.test(article.id)) continue;
+          await archivePut({id:article.id, title:String(article.title || '').slice(0,250), keyword:String(article.keyword || '').slice(0,250), type:article.type === 'promo' ? 'promo' : 'info', createdAt:typeof article.createdAt === 'string' ? article.createdAt : new Date().toISOString(), content:article.content});
+          restored++;
+        }
+        await renderArchiveModal(); await updateArchiveCount();
+        alert(`원고 ${restored}개를 불러왔습니다.`);
+      } catch(e) { alert(`백업 불러오기 실패: ${e.message}`); }
+      finally { input.value=''; }
+    }
+    function extractTitle(text) {
+      return (String(text || '').match(/^#\s*(.*)$/m)?.[1] || '').replace(/[\*_]/g,'').trim() || '제목 없는 원고';
+    }
+    function updateThumbnailFromTitle(text) {
+      document.getElementById('thumbText').value = extractTitle(text);
+      drawThumbnail();
+    }
+    async function saveCurrentArticle(silent=false) {
+      const content = document.getElementById('resultTextarea').value.trim();
+      if (!content) { if (!silent) alert('저장할 원고가 없습니다.'); return; }
+      try {
+        const existing = currentArticleId ? await archiveGet(currentArticleId) : null;
+        const id = currentArticleId || newArticleId();
+        const item = {id, title:extractTitle(content), keyword:existing?.keyword || '', type:existing?.type || document.querySelector('input[name="postType"]:checked').value, createdAt:existing?.createdAt || new Date().toISOString(), content};
+        await archivePut(item);
+        currentArticleId=id;
+        await updateArchiveCount();
+        if (!silent) showToast('수정 원고를 보관함에 저장했습니다.');
+      } catch(e) { if (!silent) alert(`저장 실패: ${e.message}`); else setValidationStatus('브라우저에 원고를 자동 저장하지 못했습니다. 즉시 원고를 복사하고 백업해 주세요.', true); }
+    }
 
     function getHistory(key) {
       try {
@@ -472,7 +724,7 @@
 
     function clearCurrentHistory() {
       const typeName = activeModalType === 'info' ? '정보성' : '홍보성';
-      if (confirm(`저장된 ${typeName} 작성 기록을 모두 삭제하시겠습니까?`)) {
+      if (confirm(`저장된 ${typeName} 제목 기록을 모두 삭제하시겠습니까? 본문 보관함은 그대로 유지됩니다.`)) {
         const key = activeModalType === 'info' ? INFO_STORAGE_KEY : PROMO_STORAGE_KEY;
         localStorage.removeItem(key);
         updateHistoryUI();
@@ -528,6 +780,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       updateHistoryUI();
       drawThumbnail();
+      updateArchiveCount();
     });
 
     function togglePostTypeUI() {
@@ -551,9 +804,14 @@
     function updateCharCount() {
       const textarea = document.getElementById('resultTextarea');
       const text = textarea.value || "";
-      const noSpaceLength = text.replace(/\s/g, '').length;
-
+      const noSpaceLength = bodyCharCount(text);
       document.getElementById('charCountNoSpace').innerText = noSpaceLength.toLocaleString();
+      document.getElementById('charCountNoSpace').className = noSpaceLength >= 2000 && noSpaceLength <= 2500 ? 'text-emerald-700 text-sm' : 'text-amber-700 text-sm';
+      rawMarkdownContent = text;
+      if (currentArticleId) {
+        clearTimeout(draftSaveTimer);
+        draftSaveTimer = setTimeout(() => saveCurrentArticle(true), 900);
+      }
     }
 
     function showToast(msg) {
@@ -636,7 +894,7 @@
       } else {
         textarea.classList.add('hidden');
         preview.classList.remove('hidden');
-        preview.innerHTML = renderMarkdownToHtml(rawMarkdownContent || textarea.value);
+        preview.innerHTML = renderMarkdownToHtml(textarea.value);
         previewBtn.className = "px-3 py-1 rounded-md bg-white text-slate-800 shadow-sm font-semibold";
         rawBtn.className = "px-3 py-1 rounded-md text-slate-500 hover:text-slate-800";
       }
@@ -646,8 +904,9 @@
       const preview = document.getElementById('previewContainer');
       const textarea = document.getElementById('resultTextarea');
       
-      const htmlContent = preview.innerHTML || renderMarkdownToHtml(textarea.value);
-      const textContent = preview.innerText || textarea.value;
+      const htmlContent = renderMarkdownToHtml(textarea.value);
+      const tempPlain = document.createElement('div'); tempPlain.innerHTML = htmlContent;
+      const textContent = tempPlain.innerText || textarea.value;
 
       try {
         if (navigator.clipboard && window.ClipboardItem) {
@@ -685,9 +944,8 @@
     }
 
     function copyHtmlSource() {
-      const preview = document.getElementById('previewContainer');
       const textarea = document.getElementById('resultTextarea');
-      const htmlContent = preview.innerHTML || renderMarkdownToHtml(textarea.value);
+      const htmlContent = renderMarkdownToHtml(textarea.value);
 
       const tempTextArea = document.createElement('textarea');
       tempTextArea.value = htmlContent;
@@ -912,18 +1170,21 @@
       document.getElementById('outputContainer').classList.add('hidden');
       document.getElementById('loadingState').classList.remove('hidden');
       document.getElementById('generateBtn').disabled = true;
+      currentArticleId = null;
+      document.getElementById('validationStatus').classList.add('hidden');
+      document.getElementById('generationProgress').textContent = '원고를 생성하고 있습니다...';
 
       const infoHistory = getHistory(INFO_STORAGE_KEY).map(item => `[주제: ${item.title} / 키워드: ${item.keyword || '없음'}]`);
       const promoHistory = getHistory(PROMO_STORAGE_KEY).map(item => `[제목: ${item.title} / 키워드: ${item.keyword || '없음'}]`);
 
-      const systemInstruction = `당신은 퍼피댕 전용 네이버 블로그 콘텐츠 전문 작성 AI입니다.
+      let systemInstruction = `당신은 퍼피댕 전용 네이버 블로그 콘텐츠 전문 작성 AI입니다.
 
-[유사문서 100% 회피 및 기존 히스토리 배제 규칙]
+[기존 원고와 주제 및 문장 중복을 줄이기 위한 규칙]
 이전에 퍼피댕 블로그에서 이미 생성 및 출판된 정보 및 홍보성 글의 목록입니다:
 - 과거 정보성 글 히스토리: ${infoHistory.length > 0 ? infoHistory.join(', ') : '없음'}
 - 과거 홍보성 글 히스토리: ${promoHistory.length > 0 ? promoHistory.join(', ') : '없음'}
 
-★ 위 기존 작성 히스토리에 포함된 키워드, 제목, 유사 내용 및 구성 조합은 완전히 배제하여 유사문서 감지를 100% 회피하고 전적으로 새로운 관점과 신규 주제/문장 구조로 작성하세요.
+★ 위 과거 작성 이력을 참고해 새로운 관점과 문장 구조로 작성하세요. 외부 플랫폼의 중복 판정을 회피한다고 100% 보장할 수는 없습니다.
 
 [퍼피댕 블로그 콘텐츠 핵심 작성 규칙 (★필수★)]
 1. 기본 방향: 한국어 작성. 강아지 분양 전/후 실제로 궁금할 질문 기준. 보호소/유기견/입양센터 관련 내용 절대 포함 금지.
@@ -932,7 +1193,7 @@
    - **제목에 쉼표(콤마 ',')는 절대로 포함하지 마세요.**
    - 만약 메인 키워드와 서브 키워드가 함께 주어지면 제목 구조는 반드시 "메인키워드 OOOO 서브키워드 OOOO" 형태로 조합하세요.
 3. 분량 및 구성 규칙 (★핵심★):
-   - **글자수 분량:** 공백을 제외한 순수 글자수가 **반드시 최소 2,000자 이상, 최대 2,500자 이하**가 되도록 작성하세요. 정보성이든 홍보성이든 예외 없이 충실하고 깊이 있게 2,000자 이상을 채워야 합니다.
+   - **글자수 분량:** 제목, 마지막 해시태그와 Markdown 기호를 제외한 본문의 공백 제외 글자 수가 **반드시 최소 2,000자 이상, 최대 2,500자 이하**가 되도록 작성하세요. 정보성이든 홍보성이든 예외 없이 충실하고 깊이 있게 2,000자 이상을 채워야 합니다.
    - 모바일 읽기 최적화를 위해 2~4문장 단위로 단락을 나누세요.
    - 메인 제목은 Markdown '# 제목' 형식으로 첫 줄에 작성하세요.
    - 본문 구성: Markdown 표('|'), 인용구('>'), 구분선('---'), 볼드('**') 강조를 균형 있게 활용하세요.
@@ -948,64 +1209,94 @@
       }
 
       try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${userApiKey}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            systemInstruction: { parts: [{ text: systemInstruction }] }
-          })
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => null);
-          const apiMessage = errorData?.error?.message || '서버가 자세한 오류 메시지를 보내지 않았습니다.';
-          throw new Error(`Gemini API 오류 (${response.status}): ${apiMessage}`);
-        }
-
-        const data = await response.json();
-        const textResult = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-        if (!textResult) {
-          throw new Error('응답 데이터에서 원고 텍스트를 찾을 수 없습니다.');
-        }
-
-        rawMarkdownContent = textResult;
-
-        const textarea = document.getElementById('resultTextarea');
-        textarea.value = rawMarkdownContent;
-        
-        const preview = document.getElementById('previewContainer');
-        preview.innerHTML = renderMarkdownToHtml(rawMarkdownContent);
-
-        updateCharCount();
-
-        const titleMatch = rawMarkdownContent.match(/^#\s*(.*$)/m);
-        if (titleMatch && titleMatch[1]) {
-          const extractedTitle = titleMatch[1].replace(/[\*\_]/g, '').trim();
-          document.getElementById('thumbText').value = extractedTitle;
-          drawThumbnail();
-          
-          const now = new Date();
-          const dateStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
-          
-          if (postType === 'info') {
-            addHistoryItem(INFO_STORAGE_KEY, {
-              title: extractedTitle,
-              keyword: userKeywords || '자동선정',
-              date: dateStr
-            });
-          } else {
-            addHistoryItem(PROMO_STORAGE_KEY, {
-              title: extractedTitle,
-              keyword: userKeywords,
-              date: dateStr
-            });
+        let previous = [];
+        try {
+          previous = await archiveGetAll();
+          if (previous.length) {
+            systemInstruction += `\n\n[본문이 저장된 기존 원고 제목 목록]\n${previous.slice(0, 100).map(x => '- ' + x.title).join('\n')}\n위 주제와 서술 표현의 중복을 최소화하세요.`;
           }
+        } catch (storageError) {
+          console.warn('원고 보관함 열기 실패:', storageError);
+          setValidationStatus('브라우저 보관함에 접근할 수 없어 이전 본문 비교/자동 저장을 할 수 없습니다.', true);
         }
 
-        document.getElementById('copyBtn').disabled = false;
-        document.getElementById('copyHtmlBtn').disabled = false;
+        let latestDraft = '';
+        let finalStats = null;
+        let correctionPrompt = prompt;
+        let correctionError = null;
+        for (let attempt = 0; attempt < 3; attempt++) {
+          document.getElementById('generationProgress').textContent = attempt === 0 ? 'Gemini로 첫 원고를 작성하고 있습니다...' : `글자 수/유사도 재검사에 따라 ${attempt}차 재작성 중...`;
+          try {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${encodeURIComponent(userApiKey)}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: correctionPrompt }] }],
+                systemInstruction: { parts: [{ text: systemInstruction }] }
+              })
+            });
+            if (!response.ok) {
+              const errorData = await response.json().catch(() => null);
+              const apiMessage = errorData?.error?.message || '서버가 자세한 오류 메시지를 보내지 않았습니다.';
+              throw new Error(`Gemini API 오류 (${response.status}): ${apiMessage}`);
+            }
+            const data = await response.json();
+            const textResult = (data?.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('');
+            if (!textResult.trim()) throw new Error('응답 데이터에서 원고 텍스트를 찾을 수 없습니다.');
+            latestDraft = textResult.trim();
+            correctionError = null;
+          } catch (e) {
+            if (!latestDraft) throw e;
+            correctionError = e.message;
+            break; // 재작성에 실패하면 첫 원고라도 사용자에게 표시
+          }
+
+          const chars = bodyCharCount(latestDraft);
+          const closest = closestPrevious(latestDraft, previous);
+          finalStats = {chars, closest, passLength:chars>=2000 && chars<=2500, passSimilarity:closest.score < SIMILARITY_LIMIT};
+          if (finalStats.passLength && finalStats.passSimilarity) break;
+          if (attempt === 2) break;
+
+          const notes = [];
+          if (!finalStats.passLength) notes.push(`현재 본문 글자 수 ${chars}자(공백 제외, 제목 및 해시태그 제외)로 목표 2,000~2,500자 범위를 벗어났습니다. 2,200~2,350자 사이로 수정하세요.`);
+          if (!finalStats.passSimilarity) notes.push(`이전 작성 원고 「${closest.article?.title || ''}」와 표현의 7글자 묶음 유사도가 ${(closest.score*100).toFixed(1)}%로 높습니다. 주제와 표현, 문장 구조를 더 새롭게 구성하세요.`);
+          correctionPrompt = `${prompt}\n\n[직전 작성 결과의 자동 검사 피드백]\n${notes.join('\n')}\n직전 초안 전체:\n${latestDraft}\n\n위 피드백을 해결하는 수정된 원고 전문만 Markdown 형식으로 출력하세요.`;
+        }
+
+        rawMarkdownContent = latestDraft;
+        const textarea = document.getElementById('resultTextarea');
+        textarea.value = latestDraft;
+        document.getElementById('previewContainer').innerHTML = renderMarkdownToHtml(latestDraft);
+        updateCharCount();
+        updateThumbnailFromTitle(latestDraft);
+        const closestTitle = finalStats?.closest?.article?.title || '없음';
+        const percent = ((finalStats?.closest?.score || 0) * 100).toFixed(1);
+        const charText = `본문 ${finalStats?.chars ?? bodyCharCount(latestDraft)}자`;
+        const similarText = previous.length ? `이전 원고 최고 유사도 ${percent}% (${closestTitle})` : '이전 본문 없음';
+        const warning = !finalStats?.passLength || !finalStats?.passSimilarity || !!correctionError;
+        setValidationStatus(`${charText} · ${similarText}${warning ? ' · 확인 필요: 권장 범위/유사도 기준을 만족하지 못했거나 재작성에 실패했습니다.' : ' · 자동 검사 통과'}${correctionError ? ' · ' + correctionError : ''}`, warning);
+
+        const now = new Date();
+        const dateStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+        const extractedTitle = extractTitle(latestDraft);
+        const typeKey = postType === 'info' ? INFO_STORAGE_KEY : PROMO_STORAGE_KEY;
+        addHistoryItem(typeKey, {title:extractedTitle, keyword:userKeywords || '자동선정', date:dateStr});
+
+        // 생성한 원고를 브라우저의 별도 문서 보관함에 전체 저장
+        try {
+          const article = {
+            id:newArticleId(), title:extractedTitle,
+            keyword:userKeywords || '자동선정', type:postType,
+            createdAt:now.toISOString(), content:latestDraft
+          };
+          await archivePut(article);
+          currentArticleId = article.id;
+          await updateArchiveCount();
+        } catch(storageError) {
+          console.warn('원고 자동 저장 실패:', storageError);
+          setValidationStatus(`본문 ${bodyCharCount(latestDraft)}자. 자동 저장 실패: 페이지를 닫기 전에 원고를 복사하고 브라우저 저장 설정을 확인해 주세요.`, true);
+        }
+        ['copyBtn','copyHtmlBtn','saveArticleBtn'].forEach(id => document.getElementById(id).disabled = false);
         document.getElementById('loadingState').classList.add('hidden');
         document.getElementById('outputContainer').classList.remove('hidden');
 
