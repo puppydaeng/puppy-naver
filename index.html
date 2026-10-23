@@ -377,11 +377,6 @@
                 <span>네이버 서식 복사</span>
               </button>
 
-              <button onclick="downloadTxtFile()" id="downloadTxtBtn" disabled class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg transition flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed">
-                <i class="fa-solid fa-file-arrow-down"></i>
-                <span>.txt 다운로드</span>
-              </button>
-
               <button onclick="copyHtmlSource()" id="copyHtmlBtn" disabled class="px-3 py-2 bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold rounded-lg transition flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed">
                 <i class="fa-solid fa-code"></i>
                 <span>HTML 복사</span>
@@ -529,7 +524,6 @@
       document.getElementById('emptyState').classList.add('hidden');
       document.getElementById('outputContainer').classList.remove('hidden');
       document.getElementById('copyBtn').disabled = false;
-      document.getElementById('downloadTxtBtn').disabled = false;
       document.getElementById('copyHtmlBtn').disabled = false;
 
       closeHistoryModal();
@@ -750,25 +744,6 @@
       } catch (e) {
         alert('복사 중 오류가 발생했습니다.');
       }
-    }
-
-    function downloadTxtFile() {
-      const text = document.getElementById('resultTextarea').value;
-      if (!text) {
-        alert('다운로드할 원고 내용이 없습니다.');
-        return;
-      }
-
-      const titleMatch = text.match(/^#\s*(.*)$/m);
-      const filename = titleMatch ? `${titleMatch[1].trim().replace(/[\\/:*?"<>|]/g, '')}.txt` : '퍼피댕_블로그_원고.txt';
-
-      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = filename;
-      link.click();
-      URL.revokeObjectURL(link.href);
-      showToast('.txt 파일이 다운로드되었습니다!');
     }
 
     function copyHtmlSource() {
@@ -996,7 +971,7 @@
       const timeoutId = setTimeout(() => controller.abort(), 45000);
 
       try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1101,7 +1076,6 @@
       document.getElementById('loadingState').classList.add('hidden');
       document.getElementById('outputContainer').classList.remove('hidden');
       document.getElementById('copyBtn').disabled = false;
-      document.getElementById('downloadTxtBtn').disabled = false;
       document.getElementById('copyHtmlBtn').disabled = false;
     }
 
