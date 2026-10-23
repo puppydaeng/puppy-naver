@@ -22,8 +22,8 @@
         <h1 class="text-xl font-bold tracking-tight">퍼피댕 블로그 AI 원고 생성기</h1>
       </div>
       <div class="flex items-center gap-2 flex-wrap text-xs">
-        <span class="bg-[#8c6243] px-3 py-1 rounded-full text-[#f3e9de] font-semibold">퍼피댕 생성기 v1.0.5</span>
-        <span class="bg-[#9a6e4b] px-3 py-1 rounded-full text-[#f3e9de]">정보성 2000~2500자 / 독창적 맞춤 구성</span>
+        <span class="bg-[#8c6243] px-3 py-1 rounded-full text-[#f3e9de] font-semibold">퍼피댕 생성기 v1.0.6</span>
+        <span class="bg-[#9a6e4b] px-3 py-1 rounded-full text-[#f3e9de]">공백제외 2000~2500자 / 자동 해시태그 10개 추출</span>
       </div>
     </div>
   </nav>
@@ -75,7 +75,7 @@
           <div id="infoSection" class="space-y-4">
             <div class="bg-amber-50/70 border border-amber-200 p-3.5 rounded-xl text-xs text-amber-900 leading-relaxed">
               <i class="fa-solid fa-circle-info text-[#b3815a] mr-1"></i>
-              <strong>정보성 모드:</strong> 키워드를 비워두시면 이전에 작성하지 않은 새로운 반려견 정보 주제를 AI가 스스로 선정하여 2,000~2,500자 분량으로 풍성하게 작성합니다.
+              <strong>정보성 모드:</strong> 키워드를 비워두시면 이전에 작성하지 않은 새로운 반려견 정보 주제를 AI가 스스로 선정하여 공백 제외 2,000~2,500자 분량으로 풍성하게 작성하며, 하단에 10개의 추천 태그를 자동 추가합니다.
             </div>
 
             <div>
@@ -114,15 +114,20 @@
             </div>
 
             <div>
-              <label for="promoKeywords" class="block text-sm font-semibold text-slate-700 mb-1">홍보 타겟 키워드</label>
-              <input type="text" id="promoKeywords" placeholder="대전강아지분양, 대전말티푸분양" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
+              <label for="promoKeywords" class="block text-sm font-semibold text-slate-700 mb-1">메인 타겟 키워드</label>
+              <input type="text" id="promoKeywords" placeholder="예: 대전강아지분양" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
+            </div>
+
+            <div>
+              <label for="promoSubKeywords" class="block text-sm font-semibold text-slate-700 mb-1">서브 키워드 <span class="text-xs font-normal text-slate-500">(선택 입력)</span></label>
+              <input type="text" id="promoSubKeywords" placeholder="예: 말티푸" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
             </div>
 
             <div>
               <label for="promoTitleLength" class="block text-sm font-semibold text-slate-700 mb-1">제목 권장 길이 / 스타일</label>
               <select id="promoTitleLength" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] text-sm">
-                <option value="short">간결하고 명확한 제목 (25자 이내)</option>
-                <option value="normal" selected>보통 길이의 키워드 강조 제목 (35자 이내)</option>
+                <option value="short" selected>간결하고 명확한 제목 (25자 이내)</option>
+                <option value="normal">보통 길이의 키워드 강조 제목 (35자 이내)</option>
               </select>
             </div>
 
@@ -160,10 +165,20 @@
             </p>
           </div>
 
-          <!-- 작성 히스토리 관리 / 주제 기록 초기화 -->
-          <div class="p-3 bg-slate-100 rounded-xl flex items-center justify-between text-xs">
-            <span class="text-slate-600">누적 작성된 정보성 주제: <strong id="historyCount" class="text-[#b3815a]">0</strong>개</span>
-            <button type="button" onclick="clearHistory()" class="text-slate-500 hover:text-red-600 underline">주제 기록 초기화</button>
+          <!-- 작성 히스토리 관리 / 주제 및 키워드 기록 조회/초기화 -->
+          <div class="p-3.5 bg-slate-100 rounded-xl space-y-2.5 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="text-slate-700 font-medium">정보성 작성 기록: <strong id="infoHistoryCount" class="text-[#b3815a]">0</strong>개</span>
+              <button type="button" onclick="openHistoryModal('info')" class="px-2 py-1 bg-white border border-slate-200 rounded text-slate-600 font-semibold hover:border-[#b3815a] hover:text-[#b3815a] transition">
+                <i class="fa-solid fa-list-check mr-1"></i>기록 보기
+              </button>
+            </div>
+            <div class="flex items-center justify-between border-t border-slate-200 pt-2">
+              <span class="text-slate-700 font-medium">홍보성 작성 기록: <strong id="promoHistoryCount" class="text-[#b3815a]">0</strong>개</span>
+              <button type="button" onclick="openHistoryModal('promo')" class="px-2 py-1 bg-white border border-slate-200 rounded text-slate-600 font-semibold hover:border-[#b3815a] hover:text-[#b3815a] transition">
+                <i class="fa-solid fa-list-check mr-1"></i>기록 보기
+              </button>
+            </div>
           </div>
 
           <button type="submit" id="generateBtn" class="w-full py-3.5 px-4 bg-[#b3815a] hover:bg-[#9a6e4b] text-white font-bold rounded-xl shadow-md hover:shadow-lg transition flex items-center justify-center gap-2">
@@ -198,58 +213,76 @@
 
             <!-- 컨트롤 옵션 -->
             <div class="md:col-span-7 space-y-3.5 text-xs">
+              <!-- 상단 좌측 뱃지 설정 -->
+              <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-slate-800 block text-[11px]"><i class="fa-solid fa-tag text-[#b3815a] mr-1"></i> 상단 좌측 뱃지 설정</span>
+                  <label class="flex items-center gap-1 cursor-pointer">
+                    <input type="checkbox" id="showBadge" checked onchange="drawThumbnail()" class="w-3.5 h-3.5 text-[#b3815a] rounded border-slate-300 focus:ring-[#b3815a]">
+                    <span class="text-[11px] text-slate-600 font-medium">표시하기</span>
+                  </label>
+                </div>
+                <div>
+                  <input type="text" id="thumbBadgeText" value="퍼피댕" placeholder="예: 퍼피댕" oninput="drawThumbnail()" class="w-full px-3 py-1.5 border rounded-lg focus:ring-[#b3815a] focus:border-[#b3815a] text-xs">
+                </div>
+              </div>
+
               <!-- 썸네일 메인 텍스트 -->
               <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
                 <div class="flex items-center justify-between">
                   <span class="font-bold text-slate-800 block text-[11px]"><i class="fa-solid fa-heading text-[#b3815a] mr-1"></i> 메인 텍스트 설정</span>
                   <div class="flex items-center gap-1">
                     <button type="button" onclick="setMainYPos(28)" class="px-2 py-0.5 bg-white border border-slate-200 rounded text-[10px] text-slate-600 hover:border-[#b3815a] hover:text-[#b3815a]">상단</button>
-                    <button type="button" onclick="setMainYPos(50)" class="px-2 py-0.5 bg-white border border-slate-200 rounded text-[10px] text-slate-600 hover:border-[#b3815a] hover:text-[#b3815a]">중앙</button>
+                    <button type="button" onclick="setMainYPos(42)" class="px-2 py-0.5 bg-white border border-slate-200 rounded text-[10px] text-slate-600 hover:border-[#b3815a] hover:text-[#b3815a]">중앙</button>
                   </div>
                 </div>
                 <div>
-                  <input type="text" id="thumbText" value="강아지 건강검진 주기 가이드" oninput="drawThumbnail()" class="w-full px-3 py-1.5 border rounded-lg focus:ring-[#b3815a] focus:border-[#b3815a] text-xs">
+                  <input type="text" id="thumbText" value="강아지 슬개골 탈구 예방법 발바닥 털과 발톱 관리 수칙" oninput="drawThumbnail()" class="w-full px-3 py-1.5 border rounded-lg focus:ring-[#b3815a] focus:border-[#b3815a] text-xs">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                   <div>
                     <div class="flex justify-between items-center mb-0.5">
                       <label for="thumbFontSize" class="font-semibold text-slate-600 text-[10px]">크기</label>
-                      <span id="fontSizeVal" class="text-[#b3815a] font-bold text-[10px]">46px</span>
+                      <span id="fontSizeVal" class="text-[#b3815a] font-bold text-[10px]">44px</span>
                     </div>
-                    <input type="range" id="thumbFontSize" min="20" max="80" value="46" oninput="updateRangeVal('thumbFontSize', 'fontSizeVal', 'px'); drawThumbnail()" class="w-full accent-[#b3815a] cursor-pointer h-1 bg-slate-200 rounded-lg appearance-none">
+                    <input type="range" id="thumbFontSize" min="20" max="80" value="44" oninput="updateRangeVal('thumbFontSize', 'fontSizeVal', 'px'); drawThumbnail()" class="w-full accent-[#b3815a] cursor-pointer h-1 bg-slate-200 rounded-lg appearance-none">
                   </div>
                   <div>
                     <div class="flex justify-between items-center mb-0.5">
                       <label for="thumbMainYPos" class="font-semibold text-slate-600 text-[10px]">세로 위치 (Y)</label>
-                      <span id="mainYPosVal" class="text-[#b3815a] font-bold text-[10px]">50%</span>
+                      <span id="mainYPosVal" class="text-[#b3815a] font-bold text-[10px]">42%</span>
                     </div>
-                    <input type="range" id="thumbMainYPos" min="10" max="90" value="50" oninput="updateRangeVal('thumbMainYPos', 'mainYPosVal', '%'); drawThumbnail()" class="w-full accent-[#b3815a] cursor-pointer h-1 bg-slate-200 rounded-lg appearance-none">
+                    <input type="range" id="thumbMainYPos" min="10" max="90" value="42" oninput="updateRangeVal('thumbMainYPos', 'mainYPosVal', '%'); drawThumbnail()" class="w-full accent-[#b3815a] cursor-pointer h-1 bg-slate-200 rounded-lg appearance-none">
                   </div>
                 </div>
               </div>
 
-              <!-- 썸네일 서브 텍스트 -->
+              <!-- 썸네일 서브 텍스트 및 가로선 -->
               <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
                 <div class="flex items-center justify-between">
-                  <span class="font-bold text-slate-800 block text-[11px]"><i class="fa-solid fa-align-left text-[#b3815a] mr-1"></i> 서브 텍스트 설정 (하단 고정 & 메인 브라운)</span>
+                  <span class="font-bold text-slate-800 block text-[11px]"><i class="fa-solid fa-align-left text-[#b3815a] mr-1"></i> 서브 텍스트 & 가로선 설정</span>
+                  <label class="flex items-center gap-1 cursor-pointer">
+                    <input type="checkbox" id="showDivider" checked onchange="drawThumbnail()" class="w-3.5 h-3.5 text-[#b3815a] rounded border-slate-300 focus:ring-[#b3815a]">
+                    <span class="text-[11px] text-slate-600 font-medium">구분선 표시</span>
+                  </label>
                 </div>
                 <div>
-                  <input type="text" id="thumbSubText" value="퍼피댕안심분양소" placeholder="예: 퍼피댕안심분양소" oninput="drawThumbnail()" class="w-full px-3 py-1.5 border rounded-lg focus:ring-[#b3815a] focus:border-[#b3815a] text-xs">
+                  <input type="text" id="thumbSubText" value="퍼피댕 안심분양소" placeholder="예: 퍼피댕 안심분양소" oninput="drawThumbnail()" class="w-full px-3 py-1.5 border rounded-lg focus:ring-[#b3815a] focus:border-[#b3815a] text-xs">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                   <div>
                     <div class="flex justify-between items-center mb-0.5">
-                      <label for="thumbSubFontSize" class="font-semibold text-slate-600 text-[10px]">크기 (34px 고정)</label>
-                      <span id="subFontSizeVal" class="text-[#b3815a] font-bold text-[10px]">34px</span>
+                      <label for="thumbSubFontSize" class="font-semibold text-slate-600 text-[10px]">크기</label>
+                      <span id="subFontSizeVal" class="text-[#b3815a] font-bold text-[10px]">22px</span>
                     </div>
-                    <input type="range" id="thumbSubFontSize" min="12" max="50" value="34" oninput="updateRangeVal('thumbSubFontSize', 'subFontSizeVal', 'px'); drawThumbnail()" class="w-full accent-[#b3815a] cursor-pointer h-1 bg-slate-200 rounded-lg appearance-none">
+                    <input type="range" id="thumbSubFontSize" min="12" max="50" value="22" oninput="updateRangeVal('thumbSubFontSize', 'subFontSizeVal', 'px'); drawThumbnail()" class="w-full accent-[#b3815a] cursor-pointer h-1 bg-slate-200 rounded-lg appearance-none">
                   </div>
                   <div>
                     <div class="flex justify-between items-center mb-0.5">
-                      <label for="thumbSubYPos" class="font-semibold text-slate-600 text-[10px]">세로 위치 (하단 고정)</label>
-                      <span id="subYPosVal" class="text-[#b3815a] font-bold text-[10px]">88%</span>
+                      <label for="thumbSubYPos" class="font-semibold text-slate-600 text-[10px]">세로 위치 (Y)</label>
+                      <span id="subYPosVal" class="text-[#b3815a] font-bold text-[10px]">78%</span>
                     </div>
-                    <input type="range" id="thumbSubYPos" min="10" max="95" value="88" oninput="updateRangeVal('thumbSubYPos', 'subYPosVal', '%'); drawThumbnail()" class="w-full accent-[#b3815a] cursor-pointer h-1 bg-slate-200 rounded-lg appearance-none">
+                    <input type="range" id="thumbSubYPos" min="10" max="95" value="78" oninput="updateRangeVal('thumbSubYPos', 'subYPosVal', '%'); drawThumbnail()" class="w-full accent-[#b3815a] cursor-pointer h-1 bg-slate-200 rounded-lg appearance-none">
                   </div>
                 </div>
               </div>
@@ -258,9 +291,9 @@
               <div>
                 <div class="flex justify-between items-center mb-1">
                   <label for="thumbBorderWidth" class="font-semibold text-slate-700">테두리 두께</label>
-                  <span id="borderWidthVal" class="text-[#b3815a] font-bold">20px</span>
+                  <span id="borderWidthVal" class="text-[#b3815a] font-bold">16px</span>
                 </div>
-                <input type="range" id="thumbBorderWidth" min="0" max="50" value="20" oninput="updateRangeVal('thumbBorderWidth', 'borderWidthVal', 'px'); drawThumbnail()" class="w-full accent-[#b3815a] cursor-pointer">
+                <input type="range" id="thumbBorderWidth" min="0" max="50" value="16" oninput="updateRangeVal('thumbBorderWidth', 'borderWidthVal', 'px'); drawThumbnail()" class="w-full accent-[#b3815a] cursor-pointer">
               </div>
 
               <!-- 배경 색상 -->
@@ -354,7 +387,7 @@
           <div id="loadingState" class="hidden flex-1 flex flex-col items-center justify-center p-8 text-center">
             <div class="w-12 h-12 border-4 border-[#f3e9de] border-t-[#b3815a] rounded-full animate-spin mb-4"></div>
             <p class="font-semibold text-slate-700">고유 맞춤 원고 및 썸네일 생성 중...</p>
-            <p class="text-xs text-slate-400 mt-1">유사문서 100%검증 / 2,000~2,500자 분량 맞춤 / 표 및 구분선 자동 서식 적용 중</p>
+            <p class="text-xs text-slate-400 mt-1">유사문서 100%검증 / 공백 제외 2,000~2,500자 맞춤 / 하단 태그 10개 자동 작성 중</p>
           </div>
 
           <!-- 빈 상태 -->
@@ -382,39 +415,114 @@
     <span id="toastMsg">클립보드에 복사되었습니다!</span>
   </div>
 
+  <!-- 작성 기록 모달 -->
+  <div id="historyModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[80vh]">
+      <div class="p-4 bg-slate-900 text-white flex justify-between items-center">
+        <h3 id="modalTitle" class="font-bold text-sm flex items-center gap-2">
+          <i class="fa-solid fa-clock-rotate-left text-[#e2ba93]"></i> 작성 기록
+        </h3>
+        <button onclick="closeHistoryModal()" class="text-slate-400 hover:text-white transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div class="p-4 flex-1 overflow-y-auto space-y-2 text-xs" id="historyListContainer">
+        <!-- 기록 목록 삽입 영역 -->
+      </div>
+      <div class="p-3 bg-slate-50 border-t flex justify-between items-center">
+        <button onclick="clearCurrentHistory()" class="text-xs text-red-600 hover:underline font-semibold">
+          <i class="fa-solid fa-trash-can mr-1"></i>이 항목 전체 초기화
+        </button>
+        <button onclick="closeHistoryModal()" class="px-4 py-1.5 bg-slate-800 text-white font-semibold rounded-lg text-xs">닫기</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     let rawMarkdownContent = "";
-    const STORAGE_KEY = "puppydaeng_used_topics";
+    const INFO_STORAGE_KEY = "puppydaeng_used_info_topics";
+    const PROMO_STORAGE_KEY = "puppydaeng_used_promo_topics";
+    let activeModalType = "info";
 
-    function getUsedTopics() {
+    function getHistory(key) {
       try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+        return JSON.parse(localStorage.getItem(key)) || [];
       } catch (e) {
         return [];
       }
     }
 
-    function addUsedTopic(topic) {
-      if (!topic) return;
-      const topics = getUsedTopics();
-      if (!topics.includes(topic)) {
-        topics.push(topic);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(topics));
+    function addHistoryItem(key, item) {
+      if (!item) return;
+      const list = getHistory(key);
+      if (!list.some(existing => existing.title === item.title)) {
+        list.unshift(item); // 최신글을 상단으로
+        localStorage.setItem(key, JSON.stringify(list));
         updateHistoryUI();
       }
     }
 
-    function clearHistory() {
-      if (confirm("이전에 작성했던 정보성 주제 저장 기록을 초기화하시겠습니까?")) {
-        localStorage.removeItem(STORAGE_KEY);
+    function removeHistoryItem(key, index) {
+      const list = getHistory(key);
+      list.splice(index, 1);
+      localStorage.setItem(key, JSON.stringify(list));
+      updateHistoryUI();
+      renderHistoryListModal();
+    }
+
+    function clearCurrentHistory() {
+      const typeName = activeModalType === 'info' ? '정보성' : '홍보성';
+      if (confirm(`저장된 ${typeName} 작성 기록을 모두 삭제하시겠습니까?`)) {
+        const key = activeModalType === 'info' ? INFO_STORAGE_KEY : PROMO_STORAGE_KEY;
+        localStorage.removeItem(key);
         updateHistoryUI();
-        showToast("주제 작성 기록이 초기화되었습니다.");
+        renderHistoryListModal();
+        showToast(`${typeName} 기록이 초기화되었습니다.`);
       }
     }
 
     function updateHistoryUI() {
-      const topics = getUsedTopics();
-      document.getElementById('historyCount').innerText = topics.length;
+      const infoList = getHistory(INFO_STORAGE_KEY);
+      const promoList = getHistory(PROMO_STORAGE_KEY);
+      document.getElementById('infoHistoryCount').innerText = infoList.length;
+      document.getElementById('promoHistoryCount').innerText = promoList.length;
+    }
+
+    function openHistoryModal(type) {
+      activeModalType = type;
+      document.getElementById('modalTitle').innerText = type === 'info' ? '정보성 글 작성 히스토리' : '홍보성 글 작성 히스토리';
+      renderHistoryListModal();
+      document.getElementById('historyModal').classList.remove('hidden');
+    }
+
+    function closeHistoryModal() {
+      document.getElementById('historyModal').classList.add('hidden');
+    }
+
+    function renderHistoryListModal() {
+      const key = activeModalType === 'info' ? INFO_STORAGE_KEY : PROMO_STORAGE_KEY;
+      const list = getHistory(key);
+      const container = document.getElementById('historyListContainer');
+
+      if (list.length === 0) {
+        container.innerHTML = `<div class="text-center py-8 text-slate-400">저장된 작성 기록이 없습니다.</div>`;
+        return;
+      }
+
+      container.innerHTML = list.map((item, idx) => `
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex justify-between items-start gap-2">
+          <div class="space-y-1">
+            <div class="font-bold text-slate-800">${item.title}</div>
+            <div class="text-[11px] text-slate-500">
+              ${item.keyword ? `<span class="bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-medium mr-1">키워드: ${item.keyword}</span>` : ''}
+              <span class="text-slate-400">${item.date || ''}</span>
+            </div>
+          </div>
+          <button onclick="removeHistoryItem('${key}', ${idx})" class="text-slate-400 hover:text-red-500 p-1">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      `).join('');
     }
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -624,37 +732,92 @@
       const canvas = document.getElementById('thumbCanvas');
       const ctx = canvas.getContext('2d');
 
-      const text = document.getElementById('thumbText').value || "퍼피댕 반려견 가이드";
+      const text = document.getElementById('thumbText').value || "강아지 슬개골 탈구 예방법 발바닥 털과 발톱 관리 수칙";
       const subText = document.getElementById('thumbSubText') ? document.getElementById('thumbSubText').value.trim() : "";
+      const badgeText = document.getElementById('thumbBadgeText') ? document.getElementById('thumbBadgeText').value.trim() : "퍼피댕";
+      const showBadge = document.getElementById('showBadge') ? document.getElementById('showBadge').checked : true;
+      const showDivider = document.getElementById('showDivider') ? document.getElementById('showDivider').checked : true;
       
-      const fontSize = parseInt(document.getElementById('thumbFontSize').value) || 46;
-      const mainYPosPercent = parseInt(document.getElementById('thumbMainYPos').value) || 50;
+      const fontSize = parseInt(document.getElementById('thumbFontSize').value) || 44;
+      const mainYPosPercent = parseInt(document.getElementById('thumbMainYPos').value) || 42;
       
-      const subFontSize = document.getElementById('thumbSubFontSize') ? parseInt(document.getElementById('thumbSubFontSize').value) || 34 : 34;
-      const subYPosPercent = document.getElementById('thumbSubYPos') ? parseInt(document.getElementById('thumbSubYPos').value) || 88 : 88;
+      const subFontSize = document.getElementById('thumbSubFontSize') ? parseInt(document.getElementById('thumbSubFontSize').value) || 22 : 22;
+      const subYPosPercent = document.getElementById('thumbSubYPos') ? parseInt(document.getElementById('thumbSubYPos').value) || 78 : 78;
 
       const textColor = document.getElementById('thumbTextColor').value;
       const bgColor = document.getElementById('thumbBgColor').value;
       const borderColor = document.getElementById('thumbBorderColor').value;
-      const borderWidth = parseInt(document.getElementById('thumbBorderWidth').value) || 20;
+      const borderWidth = parseInt(document.getElementById('thumbBorderWidth').value) || 16;
 
-      const BRAND_MAIN_COLOR = "#b3815a";
+      const BRAND_MAIN_COLOR = borderColor || "#b3815a";
 
+      // 1. 전체 배경 칠하기
       ctx.fillStyle = bgColor;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+      // 2. 바깥쪽 테두리 그리기
       if (borderWidth > 0) {
         ctx.strokeStyle = borderColor;
         ctx.lineWidth = borderWidth * 2;
         ctx.strokeRect(0, 0, canvas.width, canvas.height);
       }
 
+      // 여백 계산
+      const insetPadding = borderWidth + 18;
+
+      // 3. 상단 좌측 뱃지 그리기 (알약 형태)
+      if (showBadge && badgeText) {
+        const badgeX = insetPadding + 18;
+        const badgeY = insetPadding + 18;
+        ctx.font = `bold 20px Pretendard, sans-serif`;
+        const badgeMetrics = ctx.measureText(badgeText);
+        const badgeWidth = Math.max(100, badgeMetrics.width + 40);
+        const badgeHeight = 38;
+        const badgeRadius = 19;
+
+        ctx.fillStyle = BRAND_MAIN_COLOR;
+        ctx.beginPath();
+        if (ctx.roundRect) {
+          ctx.roundRect(badgeX, badgeY, badgeWidth, badgeHeight, badgeRadius);
+        } else {
+          ctx.rect(badgeX, badgeY, badgeWidth, badgeHeight);
+        }
+        ctx.fill();
+
+        ctx.fillStyle = "#ffffff";
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(badgeText, badgeX + badgeWidth / 2, badgeY + badgeHeight / 2 + 1);
+      }
+
+      // 4. 중앙 내측 둥근 카드 상자 그리기
+      const cardX = insetPadding + 18;
+      const cardY = insetPadding + 75;
+      const cardWidth = canvas.width - (cardX * 2);
+      const cardHeight = canvas.height - cardY - insetPadding - 20;
+
+      ctx.save();
+      ctx.fillStyle = "#ffffff";
+      ctx.strokeStyle = "rgba(179, 129, 90, 0.25)";
+      ctx.lineWidth = 1.5;
+      
+      ctx.beginPath();
+      if (ctx.roundRect) {
+        ctx.roundRect(cardX, cardY, cardWidth, cardHeight, 24);
+      } else {
+        ctx.rect(cardX, cardY, cardWidth, cardHeight);
+      }
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+
+      // 5. 메인 텍스트 그리기
       ctx.fillStyle = textColor;
       ctx.font = `bold ${fontSize}px Pretendard, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
-      const maxWidth = canvas.width - (borderWidth * 2) - 60;
+      const maxTextWidth = cardWidth - 60;
       const words = text.split(' ');
       let lines = [];
       let currentLine = words[0] || "";
@@ -662,7 +825,7 @@
       for (let i = 1; i < words.length; i++) {
         let testLine = currentLine + " " + words[i];
         let metrics = ctx.measureText(testLine);
-        if (metrics.width > maxWidth) {
+        if (metrics.width > maxTextWidth) {
           lines.push(currentLine);
           currentLine = words[i];
         } else {
@@ -680,8 +843,21 @@
         ctx.fillText(line, canvas.width / 2, mainStartY + (index * lineHeight));
       });
 
+      // 6. 하단 구분선(가로선) 그리기
+      const subY = canvas.height * (subYPosPercent / 100);
+      
+      if (showDivider) {
+        const dividerY = mainStartY + totalMainHeight + (subY - (mainStartY + totalMainHeight)) / 2;
+        ctx.strokeStyle = BRAND_MAIN_COLOR;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(canvas.width / 2 - 25, dividerY);
+        ctx.lineTo(canvas.width / 2 + 25, dividerY);
+        ctx.stroke();
+      }
+
+      // 7. 서브 텍스트 그리기
       if (subText) {
-        const subY = canvas.height * (subYPosPercent / 100);
         ctx.font = `bold ${subFontSize}px Pretendard, sans-serif`;
         ctx.fillStyle = BRAND_MAIN_COLOR;
         ctx.globalAlpha = 1.0;
@@ -709,9 +885,10 @@
       }
 
       let userKeywords = "";
+      let userSubKeywords = "";
       let includeCompanyInTitle = false;
       let promoStyle = "review";
-      let promoTitleLength = "normal";
+      let promoTitleLength = "short";
       let promoDetails = "";
 
       if (postType === 'info') {
@@ -719,13 +896,14 @@
         includeCompanyInTitle = document.getElementById('includeCompanyInTitleInfo').checked;
       } else {
         userKeywords = document.getElementById('promoKeywords').value.trim();
+        userSubKeywords = document.getElementById('promoSubKeywords').value.trim();
         includeCompanyInTitle = document.getElementById('includeCompanyInTitlePromo').checked;
         promoStyle = document.querySelector('input[name="promoStyle"]:checked').value;
         promoTitleLength = document.getElementById('promoTitleLength').value;
         promoDetails = document.getElementById('promoDetails').value.trim();
 
         if (!userKeywords) {
-          alert('홍보성 포스팅은 타겟 키워드를 입력해 주세요.');
+          alert('홍보성 포스팅은 메인 타겟 키워드를 입력해 주세요.');
           return;
         }
       }
@@ -735,27 +913,38 @@
       document.getElementById('loadingState').classList.remove('hidden');
       document.getElementById('generateBtn').disabled = true;
 
-      const usedTopics = getUsedTopics();
+      const infoHistory = getHistory(INFO_STORAGE_KEY).map(item => `[주제: ${item.title} / 키워드: ${item.keyword || '없음'}]`);
+      const promoHistory = getHistory(PROMO_STORAGE_KEY).map(item => `[제목: ${item.title} / 키워드: ${item.keyword || '없음'}]`);
 
       const systemInstruction = `당신은 퍼피댕 전용 네이버 블로그 콘텐츠 전문 작성 AI입니다.
 
-[퍼피댕 정보성 콘텐츠 핵심 작성 규칙]
+[유사문서 100% 회피 및 기존 히스토리 배제 규칙]
+이전에 퍼피댕 블로그에서 이미 생성 및 출판된 정보 및 홍보성 글의 목록입니다:
+- 과거 정보성 글 히스토리: ${infoHistory.length > 0 ? infoHistory.join(', ') : '없음'}
+- 과거 홍보성 글 히스토리: ${promoHistory.length > 0 ? promoHistory.join(', ') : '없음'}
+
+★ 위 기존 작성 히스토리에 포함된 키워드, 제목, 유사 내용 및 구성 조합은 완전히 배제하여 유사문서 감지를 100% 회피하고 전적으로 새로운 관점과 신규 주제/문장 구조로 작성하세요.
+
+[퍼피댕 블로그 콘텐츠 핵심 작성 규칙 (★필수★)]
 1. 기본 방향: 한국어 작성. 강아지 분양 전/후 실제로 궁금할 질문 기준. 보호소/유기견/입양센터 관련 내용 절대 포함 금지.
-2. 원하는 주제 느낌: 성견 크기 예상, 수컷/암컷 차이, 산책 횟수, 이갈이, 심장사상충, 사료 변경, 하네스 vs 목줄 등 실제 검색 키워드 위주.
-3. 분량 및 문체: **공백 제외 2,000자 ~ 2,500자 엄수**. 짧거나 4000자 넘지 말 것. 모바일용 2~4문장 문단 나눔. 초보 보호자 눈높이 설명체. 줄바꿈 및 빈 줄을 과도하게 생성하지 말 것(구분선 앞뒤 빈 줄 1번만 허용).
-4. 제목 작성법: 
-- 이전에 이미 다룬 주제 목록: [${usedTopics.join(', ')}]
-- 키워드가 지정되지 않았다면 위의 목록에 없는 완전히 새롭고 유익한 강아지 정보성 주제를 선정하세요.
-- 메인 제목은 Markdown '# 제목' 형식으로 첫 줄에 작성하세요.
-5. 본문 구성:
-- Markdown 표('|'), 인용구('>'), 구분선('---'), 볼드('**') 강조를 균형 있게 활용하세요.
-- 모든 서식은 깔끔하게 적용하며 줄바꿈이 불필요하게 2번 이상 들어가지 않도록 하세요.`;
+2. 제목 규칙 (★엄수★):
+   - **제목 길이는 반드시 25자 이내로 짧고 명확하게 작성하세요.** (정보성, 홍보성 모두 적용)
+   - **제목에 쉼표(콤마 ',')는 절대로 포함하지 마세요.**
+   - 만약 메인 키워드와 서브 키워드가 함께 주어지면 제목 구조는 반드시 "메인키워드 OOOO 서브키워드 OOOO" 형태로 조합하세요.
+3. 분량 및 구성 규칙 (★핵심★):
+   - **글자수 분량:** 공백을 제외한 순수 글자수가 **반드시 최소 2,000자 이상, 최대 2,500자 이하**가 되도록 작성하세요. 정보성이든 홍보성이든 예외 없이 충실하고 깊이 있게 2,000자 이상을 채워야 합니다.
+   - 모바일 읽기 최적화를 위해 2~4문장 단위로 단락을 나누세요.
+   - 메인 제목은 Markdown '# 제목' 형식으로 첫 줄에 작성하세요.
+   - 본문 구성: Markdown 표('|'), 인용구('>'), 구분선('---'), 볼드('**') 강조를 균형 있게 활용하세요.
+4. 원고 맨 아래 태그 규칙 (★필수★):
+   - **원고의 맨 마지막에는 해당 포스팅 내용 및 주제와 연관된 네이버 블로그용 해시태그 10개를 작성하세요.**
+   - 태그 작성 형태 예시: #대전강아지분양 #말티푸분양 #강아지건강검진 #퍼피댕 ... (띄어쓰기로 10개 나열)`;
 
       let prompt = "";
       if (postType === 'info') {
-        prompt = `포스팅 유형: 정보성 콘텐츠\n상호명/브랜드: ${companyName}\n요청 주제/키워드: ${userKeywords || '자동 선정 (기존 히스토리 제외)'}\n제목 내 상호명 포함 여부: ${includeCompanyInTitle ? '포함' : '미포함'}\n문체: ${tone}\n\n위 규칙을 준수하여 공백 제외 2,000자~2,500자 분량의 네이버 블로그 원고를 작성해 주세요.`;
+        prompt = `포스팅 유형: 정보성 콘텐츠\n상호명/브랜드: ${companyName}\n요청 주제/키워드: ${userKeywords || '자동 선정 (기존 히스토리 제외)'}\n제목 내 상호명 포함 여부: ${includeCompanyInTitle ? '포함' : '미포함'}\n문체: ${tone}\n\n위 규칙을 준수하여 제목은 25자 이내(콤마 금지)로 짧게 구성하고, 공백 제외 2,000자~2,500자 분량으로 작성한 후 원고 맨 끝에 관련 태그 10개를 띄어쓰기로 나열해 주세요.`;
       } else {
-        prompt = `포스팅 유형: 홍보성 콘텐츠\n상호명/브랜드: ${companyName}\n타겟 키워드: ${userKeywords}\n홍보 스타일: ${promoStyle}\n제목 길이: ${promoTitleLength}\n제목 내 상호명 포함 여부: ${includeCompanyInTitle ? '포함' : '미포함'}\n매장 특징/강점: ${promoDetails}\n문체: ${tone}\n\n위 규칙을 준수하여 자연스럽고 신뢰감 있는 홍보용 원고를 작성해 주세요.`;
+        prompt = `포스팅 유형: 홍보성 콘텐츠\n상호명/브랜드: ${companyName}\n메인 타겟 키워드: ${userKeywords}\n서브 키워드: ${userSubKeywords || '없음'}\n홍보 스타일: ${promoStyle}\n제목 길이: 25자 이내 (짧은 제목 권장)\n제목 내 상호명 포함 여부: ${includeCompanyInTitle ? '포함' : '미포함'}\n매장 특징/강점: ${promoDetails}\n문체: ${tone}\n\n위 규칙을 준수하여 제목은 25자 이내(콤마 금지, 메인+서브 키워드 조합 형태)로 작성하고, 공백 제외 2,000자~2,500자 분량의 풍성한 홍보 원고를 만든 후 원고 맨 끝에 추천 태그 10개를 띄어쓰기(#태그1 #태그2...)로 넣어 주세요.`;
       }
 
       try {
@@ -794,8 +983,22 @@
           const extractedTitle = titleMatch[1].replace(/[\*\_]/g, '').trim();
           document.getElementById('thumbText').value = extractedTitle;
           drawThumbnail();
-          if (postType === 'info' && !userKeywords) {
-            addUsedTopic(extractedTitle);
+          
+          const now = new Date();
+          const dateStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+          
+          if (postType === 'info') {
+            addHistoryItem(INFO_STORAGE_KEY, {
+              title: extractedTitle,
+              keyword: userKeywords || '자동선정',
+              date: dateStr
+            });
+          } else {
+            addHistoryItem(PROMO_STORAGE_KEY, {
+              title: extractedTitle,
+              keyword: userKeywords,
+              date: dateStr
+            });
           }
         }
 
