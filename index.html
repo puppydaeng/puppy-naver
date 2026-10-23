@@ -22,8 +22,8 @@
         <h1 class="text-xl font-bold tracking-tight">퍼피댕 블로그 AI 원고 생성기</h1>
       </div>
       <div class="flex items-center gap-2 flex-wrap text-xs">
-        <span class="bg-[#8c6243] px-3 py-1 rounded-full text-[#f3e9de] font-semibold">퍼피댕 생성기 v1.0.4</span>
-        <span class="bg-[#9a6e4b] px-3 py-1 rounded-full text-[#f3e9de]">정보성 2000~2500자 / 중복 100% 방지</span>
+        <span class="bg-[#8c6243] px-3 py-1 rounded-full text-[#f3e9de] font-semibold">퍼피댕 생성기 v1.0.5</span>
+        <span class="bg-[#9a6e4b] px-3 py-1 rounded-full text-[#f3e9de]">정보성 2000~2500자 / 독창적 맞춤 구성</span>
       </div>
     </div>
   </nav>
@@ -38,7 +38,7 @@
             <i class="fa-solid fa-sliders text-[#b3815a]"></i> 원고 작성 옵션
           </h2>
           <span class="text-xs bg-emerald-50 text-emerald-700 font-semibold px-2.5 py-1 rounded-full border border-emerald-200">
-            <i class="fa-solid fa-shield-halved"></i> 유사문서 자동 관리중
+            <i class="fa-solid fa-pen-nib"></i> 고유 맞춤 원고 생성
           </span>
         </div>
 
@@ -75,12 +75,12 @@
           <div id="infoSection" class="space-y-4">
             <div class="bg-amber-50/70 border border-amber-200 p-3.5 rounded-xl text-xs text-amber-900 leading-relaxed">
               <i class="fa-solid fa-circle-info text-[#b3815a] mr-1"></i>
-              <strong>정보성 모드:</strong> 키워드를 비워두시면 퍼피댕 전용 규칙에 따라 <strong>이전에 쓰지 않은 유용한 새 주제</strong>를 AI가 자동으로 선정하여 2,000~2,500자로 작성합니다.
+              <strong>정보성 모드:</strong> 키워드를 비워두시면 이전에 작성하지 않은 새로운 반려견 정보 주제를 AI가 스스로 선정하여 2,000~2,500자 분량으로 풍성하게 작성합니다.
             </div>
 
             <div>
               <label for="infoKeywords" class="block text-sm font-semibold text-slate-700 mb-1">
-                타겟 키워드 또는 주제 <span class="text-xs font-normal text-slate-500">(비워두면 자동 완전 새 주제)</span>
+                타겟 키워드 또는 주제 <span class="text-xs font-normal text-slate-500">(비워두면 자동 신규 주제 선정)</span>
               </label>
               <input type="text" id="infoKeywords" placeholder="예: 강아지 건강검진 주기 (입력 안하면 자동선정)" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
             </div>
@@ -160,7 +160,7 @@
             </p>
           </div>
 
-          <!-- 작성 히스토리 관리 / 중복 리셋 -->
+          <!-- 작성 히스토리 관리 / 주제 기록 초기화 -->
           <div class="p-3 bg-slate-100 rounded-xl flex items-center justify-between text-xs">
             <span class="text-slate-600">누적 작성된 정보성 주제: <strong id="historyCount" class="text-[#b3815a]">0</strong>개</span>
             <button type="button" onclick="clearHistory()" class="text-slate-500 hover:text-red-600 underline">주제 기록 초기화</button>
@@ -176,7 +176,7 @@
       <!-- [우측] 결과물 출력 및 대표이미지 편집 영역 -->
       <section class="lg:col-span-7 space-y-6">
         
-        <!-- 1. 대표 이미지(블로그 썸네일) 제작 카드 (원고 상단 배치) -->
+        <!-- 1. 대표 이미지(블로그 썸네일) 제작 카드 -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4">
           <div class="flex justify-between items-center border-b pb-3 border-slate-100">
             <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
@@ -196,7 +196,7 @@
               </div>
             </div>
 
-            <!-- 컨트롤 옵션 (게이지 슬라이더 + 색상 예시 팔레트) -->
+            <!-- 컨트롤 옵션 -->
             <div class="md:col-span-7 space-y-3.5 text-xs">
               <!-- 썸네일 메인 텍스트 -->
               <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
@@ -254,7 +254,7 @@
                 </div>
               </div>
 
-              <!-- 테두리 두께 (게이지 슬라이더) -->
+              <!-- 테두리 두께 -->
               <div>
                 <div class="flex justify-between items-center mb-1">
                   <label for="thumbBorderWidth" class="font-semibold text-slate-700">테두리 두께</label>
@@ -353,8 +353,8 @@
           <!-- 로딩 상태 -->
           <div id="loadingState" class="hidden flex-1 flex flex-col items-center justify-center p-8 text-center">
             <div class="w-12 h-12 border-4 border-[#f3e9de] border-t-[#b3815a] rounded-full animate-spin mb-4"></div>
-            <p class="font-semibold text-slate-700">유사문서 100% 우회 원고 및 썸네일 생성중...</p>
-            <p class="text-xs text-slate-400 mt-1">유사문서 0% 검증 / 2,000~2,500자 분량 맞춤 / 표 및 구분선 자동 서식 적용 중</p>
+            <p class="font-semibold text-slate-700">고유 맞춤 원고 및 썸네일 생성 중...</p>
+            <p class="text-xs text-slate-400 mt-1">유사문서 100%검증 / 2,000~2,500자 분량 맞춤 / 표 및 구분선 자동 서식 적용 중</p>
           </div>
 
           <!-- 빈 상태 -->
@@ -739,8 +739,8 @@
 
       const systemInstruction = `당신은 퍼피댕 전용 네이버 블로그 콘텐츠 전문 작성 AI입니다.
 
-[퍼피댕 정보성 콘텐츠 핵심 작성 규칙 17가지 - 엄수]
-1. 기본 방향: 한국어 작성. 강아지 분양 전/후 실제로 궁금할 질문 기준. 보호소/유기견/입양센터 관련 절대 금지.
+[퍼피댕 정보성 콘텐츠 핵심 작성 규칙]
+1. 기본 방향: 한국어 작성. 강아지 분양 전/후 실제로 궁금할 질문 기준. 보호소/유기견/입양센터 관련 내용 절대 포함 금지.
 2. 원하는 주제 느낌: 성견 크기 예상, 수컷/암컷 차이, 산책 횟수, 이갈이, 심장사상충, 사료 변경, 하네스 vs 목줄 등 실제 검색 키워드 위주.
 3. 분량 및 문체: **공백 제외 2,000자 ~ 2,500자 엄수**. 짧거나 4000자 넘지 말 것. 모바일용 2~4문장 문단 나눔. 초보 보호자 눈높이 설명체. 줄바꿈 및 빈 줄을 과도하게 생성하지 말 것(구분선 앞뒤 빈 줄 1번만 허용).
 4. 제목 작성법: 
