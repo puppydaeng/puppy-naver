@@ -1023,7 +1023,7 @@
 
     async function callGeminiApi(apiKey, prompt) {
       const modelSelect = document.getElementById('geminiModelSelect');
-      const selectedModel = modelSelect ? modelSelect.value : 'gemini-2.5-flash';
+      const selectedModel = modelSelect ? modelSelect.value : 'gemini-3.8-flash';
 
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 45000);
@@ -1220,7 +1220,7 @@ ${promoStyle === 'review'
 `;
 }
       try {
-        const selectedModel = document.getElementById('geminiModelSelect')?.value || 'gemini-2.5-flash';
+        const selectedModel = document.getElementById('geminiModelSelect')?.value || 'gemini-3.8-flash';
         document.getElementById('generationProgress').textContent = `${selectedModel} 모델로 원고 생성 중...`;
         
         const latestDraft = (await callGeminiApi(userApiKey, systemInstruction + '\n\n[사용자 작성 요청]\n' + prompt)).trim();
