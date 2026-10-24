@@ -1138,7 +1138,7 @@
 
       let prompt = "";
       if (postType === 'info') {
-        prompt = `포스팅 유형: 정보성 콘텐츠\n상호명/브랜드: ${companyName}\n요청 주제/키워드: ${userKeywords || '자동 선정'}\n제목 내 상호명 포함 여부: ${includeCompanyInTitle ? '포함' : '미포함'}\n문체: ${tone}\n\n위 규칙을 준수하여 제목은 25자 이내(콤마 금지)로 짧게 구성하고, 공백 제외 2,000자~2,500자 분량으로 작성한 후 원고 맨 끝에 관련 태그 10개를 띄어쓰기로 나열해 주세요.`;
+        prompt = `포스팅 유형: 정보성 콘텐츠\n상호명/브랜드: ${companyName}\n요청 주제/키워드: ${userKeywords || '자동 선정 — 강아지 분양 전 확인사항 또는 실제 보호자의 양육 질문 중 하나를 선택'}\n제목 내 상호명 포함 여부: ${includeCompanyInTitle ? '포함' : '미포함'}\n문체: ${tone}\n\n위 규칙을 준수하여 제목은 25자 이내(콤마 금지)로 짧게 구성하고, 공백 제외 2,000자~2,500자 분량으로 작성한 후 원고 맨 끝에 관련 태그 10개를 띄어쓰기로 나열해 주세요.`;
       } else {
         prompt = `포스팅 유형: 홍보성 콘텐츠\n상호명/브랜드: ${companyName}\n메인 타겟 키워드: ${userKeywords}\n서브 키워드: ${userSubKeywords || '없음'}\n홍보 스타일: ${promoStyle}\n제목 길이: ${promoTitleLength === "normal" ? "35자" : "25자"} 이내\n제목 내 상호명 포함 여부: ${includeCompanyInTitle ? '포함' : '미포함'}\n매장 특징/강점: ${promoDetails}\n문체: ${tone}\n\n위 규칙을 준수하여 제목은 ${promoTitleLength === "normal" ? "35자" : "25자"} 이내(콤마 금지)로 작성하고, 공백 제외 2,000자~2,500자 분량의 풍성한 홍보 원고를 만든 후 원고 맨 끝에 추천 태그 10개를 띄어쓰기로 넣어 주세요.`;
       }
