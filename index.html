@@ -1142,7 +1142,17 @@
       } else {
         prompt = `포스팅 유형: 홍보성 콘텐츠\n상호명/브랜드: ${companyName}\n메인 타겟 키워드: ${userKeywords}\n서브 키워드: ${userSubKeywords || '없음'}\n홍보 스타일: ${promoStyle}\n제목 길이: ${promoTitleLength === "normal" ? "35자" : "25자"} 이내\n제목 내 상호명 포함 여부: ${includeCompanyInTitle ? '포함' : '미포함'}\n매장 특징/강점: ${promoDetails}\n문체: ${tone}\n\n위 규칙을 준수하여 제목은 ${promoTitleLength === "normal" ? "35자" : "25자"} 이내(콤마 금지)로 작성하고, 공백 제외 2,000자~2,500자 분량의 풍성한 홍보 원고를 만든 후 원고 맨 끝에 추천 태그 10개를 띄어쓰기로 넣어 주세요.`;
       }
+if (postType === 'info') {
+  systemInstruction += `
 
+[정보성 콘텐츠 주제 선정 규칙]
+주제는 강아지 분양을 고민하는 사람이나 현재 강아지를 키우는 보호자가 실제로 궁금해할 내용에서 선정하세요.
+- 분양 전: 견종 선택, 성격과 크기, 분양 전 확인사항, 건강 상태 확인, 초기 비용, 준비물, 가족과의 적응,등
+- 양육 중: 사료와 급여량, 배변 훈련, 예방접종, 건강 관리, 산책, 짖음, 사회화, 미용, 계절별 관리,등
+- 위 항목과 직접 관련된 구체적인 질문 하나를 글의 중심 주제로 삼으세요.
+- 강아지가 등장하더라도 보호자의 분양·양육 고민과 직접 관련이 없는 주제는 선택하지 마세요. 일반 동물 상식, 야생동물, 동물원, 동물 뉴스, 유행성 잡담, 추상적인 철학·감성 주제는 제외하세요.
+- 주제를 고른 뒤, 분양을 고민하거나 강아지를 키우는 사람에게 실질적으로 도움이 되는지 확인하고 작성하세요.`;
+}
       try {
         const selectedModel = document.getElementById('geminiModelSelect')?.value || 'gemini-2.5-flash';
         document.getElementById('generationProgress').textContent = `${selectedModel} 모델로 원고 생성 중...`;
