@@ -744,17 +744,23 @@
       for (let i = 0; i < lines.length; i++) {
         let line = lines[i].trim();
         if (line.startsWith('|') && line.endsWith('|')) {
-          if (line.includes('---')) continue;
-          
+          if (/^\|[\s:|-]+\|$/.test(line)) continue;
+
+          const isHeaderRow = !inTable;
           if (!inTable) {
             inTable = true;
-            tableHtml = '<table style="width:100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; text-align: left;">';
+            tableHtml = '<table style="width:100%; border-collapse:collapse; margin:16px 0; font-size:13px; text-align:left;">';
           }
 
-          const cells = line.split('|').filter((_, idx, arr) => idx > 0 && idx < arr.length - 1);
+          const cells = line.split('|').slice(1, -1);
           tableHtml += '<tr>';
-          cells.forEach(cell => {
-            tableHtml += `<td style="border: 1px solid #e2e8f0; padding: 10px 12px; background-color: ${tableHtml.includes('<th>') ? '#ffffff' : '#fdfbf7'};">${cell.trim()}</td>`;
+          cells.forEach((cell, index) => {
+            const tag = isHeaderRow ? 'th' : 'td';
+            const scope = isHeaderRow ? ' scope="col"' : '';
+            const textColor = isHeaderRow ? '#784c2a' : index === 0 ? '#8c6243' : '#334155';
+            const backgroundColor = isHeaderRow ? '#f3e9de' : '#ffffff';
+            const fontWeight = isHeaderRow || index === 0 ? '700' : '400';
+            tableHtml += `<${tag}${scope} style="border:1px solid #e2e8f0; padding:10px 12px; text-align:left; vertical-align:top; line-height:1.7; color:${textColor}; background-color:${backgroundColor}; font-weight:${fontWeight};">${cell.trim()}</${tag}>`;
           });
           tableHtml += '</tr>';
         } else {
@@ -1130,13 +1136,17 @@
 3. 분량 및 구성 규칙 (★핵심★):
    - **글자수 분량:** 제목, 마지막 해시태그와 Markdown 기호를 제외한 본문의 공백 제외 글자 수가 **반드시 최소 2,000자 이상, 최대 2,500자 이하**가 되도록 작성하세요.
    - 모바일 읽기 최적화를 위해 2~4문장 단위로 단락을 나누세요.
-   - 메인 제목은 Markdown '# 제목' 형식으로 첫 줄에 작성하세요.
    - 첫 줄의 메인 제목은 "# 제목"으로 작성하세요.
-- 본문의 모든 소제목은 반드시 "> 소제목" 형식으로 한 줄에 작성하세요.
-- 소제목에는 ##, ### 또는 따옴표를 사용하지 마세요.
-- 소제목 앞뒤에는 빈 줄을 넣지말고, 해당 소제목의 본문은 다음 문단에 작성하세요.
-- 인용구는 소제목에 사용합니다.
-- 표와 볼드 강조는 내용에 중요하다고 생각하는 부분에만 사용하세요.
+   - 본문의 모든 소제목은 반드시 "> 소제목" 형식으로 한 줄에 작성하세요.
+   - 소제목에는 ##, ### 또는 따옴표를 사용하지 마세요.
+   - 소제목 앞뒤에는 빈 줄을 넣지말고, 해당 소제목의 본문은 다음 문단에 작성하세요.
+   - 인용구는 소제목에 사용합니다.
+   - 각 소제목 아래 설명 본문에는 핵심 어구를 반드시 1~2개 골라 **핵심 어구** 형식으로 표시하세요. 소제목과 표의 강조만으로 본문 강조를 대신하지 마세요.
+   - 강조는 구체적인 행동, 중요한 확인사항, 핵심 답변에 사용하고, 문장 전체나 문단 전체가 아닌 짧은 어구에만 적용하세요.
+   - 표는 비교나 정리가 필요한 경우에만 사용하세요. 첫 행은 열 제목, 다음 행은 Markdown 구분 행으로 작성하세요.
+   - 표를 사용할 때에는 표 안에서도 독자가 기억할 중요한 확인사항이나 핵심 효과를 1~2개 골라 **핵심 어구** 형식으로 표시하세요.
+   - HTML 태그나 색상 코드를 원고에 직접 출력하지 마세요. **강조 표시**는 화면과 복사 서식에서 색상과 굵기로 변환됩니다.
+   - 완성 후 각 소제목 아래 설명 본문에 **강조 표시**가 포함되어 있는지 확인하고 빠진 부분을 보완하세요. 점검 과정은 출력하지 마세요.
 4. 원고 맨 아래 태그 규칙 (★필수★):
    - 본문이 끝난 뒤 빈 줄을 넣고, 마지막 줄에 관련 해시태그를 정확히 10개 작성하세요.
    - 모든 태그 앞에는 반드시 반각 # 기호를 붙이세요.
@@ -1172,8 +1182,8 @@ if (postType === 'info') {
 - 양육 중: 사료와 급여량, 배변 훈련, 예방접종, 건강 관리, 산책, 짖음, 사회화, 미용, 계절별 관리,등
 - 위 항목과 직접 관련된 구체적인 질문 하나를 글의 중심 주제로 삼으세요.
 - 강아지가 등장하더라도 보호자의 분양·양육 고민과 직접 관련이 없는 주제는 선택하지 마세요. 일반 동물 상식, 야생동물, 동물원, 동물 뉴스, 유행성 잡담, 추상적인 철학·감성 주제는 제외하세요.
-- 주제를 고른 뒤, 분양을 고민하거나 강아지를 키우는 사람에게 실질적으로 도움이 되는지 확인하고 작성하세요.`;
-- 원고 마지막 줄에는 각 태그 앞에 반드시 #을 붙인 관련 해시태그 10개를 공백 하나로 구분해 작성하세요.
+- 주제를 고른 뒤, 분양을 고민하거나 강아지를 키우는 사람에게 실질적으로 도움이 되는지 확인하고 작성하세요.
+- 원고 마지막 줄에는 각 태그 앞에 반드시 #을 붙인 관련 해시태그 10개를 공백 하나로 구분해 작성하세요.`;
 }
 if (postType === 'promo') {
   systemInstruction += `
