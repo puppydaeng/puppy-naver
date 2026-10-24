@@ -22,7 +22,7 @@
         <h1 class="text-xl font-bold tracking-tight">퍼피댕 블로그 AI 원고 생성기</h1>
       </div>
       <div class="flex items-center gap-2 flex-wrap text-xs">
-        <span class="bg-[#8c6243] px-3 py-1 rounded-full text-[#f3e9de] font-semibold">퍼피댕 생성기 v4.0</span>
+        <span class="bg-[#8c6243] px-3 py-1 rounded-full text-[#f3e9de] font-semibold">퍼피댕 생성기 v5.0</span>
         <span class="bg-[#9a6e4b] px-3 py-1 rounded-full text-[#f3e9de]">공백제외 2000~2500자 / 자동 해시태그 10개 추출</span>
       </div>
     </div>
@@ -68,7 +68,7 @@
           <!-- 상호명 (공통) -->
           <div>
             <label for="companyName" class="block text-sm font-semibold text-slate-700 mb-1" id="companyLabel">블로그명 / 상호명</label>
-            <input type="text" id="companyName" required value="퍼피댕" placeholder="예: 퍼피댕" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
+            <input type="text" id="companyName" required value="퍼피댕" oninput="updateHashtagOptions()" placeholder="예: 퍼피댕" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
           </div>
 
           <!-- [정보성 전용 영역] -->
@@ -164,6 +164,25 @@
               <textarea id="promoDetails" rows="3" placeholder="예: 투명한 안심 분양가, 건강검진 완료, 강제 추가금 없음" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#b3815a] text-sm"></textarea>
             </div>
           </div>
+
+          <!-- 공통 해시태그 옵션: 제목 업체명 옵션과 독립 -->
+          <fieldset class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+            <legend class="px-1 text-sm font-semibold text-slate-700">마지막 줄 해시태그 설정 · 정보성/홍보성 공통</legend>
+            <label class="flex items-center gap-2 cursor-pointer text-sm">
+              <input type="checkbox" id="includeCompanyHashtag" checked onchange="updateHashtagOptions()" class="w-4 h-4 accent-[#b3815a] rounded">
+              <span>업체명 태그 넣기 <strong id="companyHashtagLabel" class="text-[#8c6243]">#퍼피댕</strong></span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer text-sm">
+              <input type="checkbox" id="includeCompanySalesHashtag" onchange="updateHashtagOptions()" class="w-4 h-4 accent-[#b3815a] rounded">
+              <span>업체명 + 강아지분양 <strong id="companySalesHashtagLabel" class="text-[#8c6243]">#퍼피댕강아지분양</strong></span>
+            </label>
+            <div>
+              <label for="customHashtags" class="block text-xs font-semibold text-slate-700 mb-1">추가로 꼭 넣을 태그 <span class="font-normal text-slate-500">(선택 입력)</span></label>
+              <input type="text" id="customHashtags" oninput="updateHashtagOptions()" placeholder="예: #대전강아지분양 #말티푸 (공백 또는 쉼표로 구분)" class="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-[#b3815a] focus:border-[#b3815a] text-sm">
+            </div>
+            <p class="text-xs text-slate-500">제목의 업체명 선택과 별개입니다. 선택한 태그를 포함해 전체 10개를 작성합니다.</p>
+            <p id="hashtagSelectionStatus" role="status" aria-live="polite" class="text-xs text-[#8c6243]">고정 태그 1개 · 나머지는 원고에 맞게 자동 작성</p>
+          </fieldset>
 
           <!-- 문체 선택 -->
           <div>
@@ -511,6 +530,91 @@
     let cachedArticles = [];
     const SIMILARITY_LIMIT = 0.28;
 
+    function normalizeHashtag(value) {
+      const tag = String(value || '').normalize('NFKC').replace(/^#+/, '').replace(/[^\p{L}\p{N}_]/gu, '');
+      return tag ? '#' + tag : '';
+    }
+
+    function uniqueHashtags(tags) {
+      const seen = new Set();
+      return tags.map(normalizeHashtag).filter(tag => {
+        const key = tag.toLowerCase();
+        if (!tag || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    }
+
+    function getHashtagPreferences(companyName) {
+      const companyTag = normalizeHashtag(companyName);
+      const salesTag = normalizeHashtag(companyName + '강아지분양');
+      const selectedCompanyTags = [];
+      if (document.getElementById('includeCompanyHashtag').checked && companyTag) selectedCompanyTags.push(companyTag);
+      if (document.getElementById('includeCompanySalesHashtag').checked && salesTag) selectedCompanyTags.push(salesTag);
+      const customTags = document.getElementById('customHashtags').value
+        .replace(/#/g, ' #').split(/[\s,，;；]+/).filter(Boolean);
+      return {
+        companyTag,
+        selectedCompanyTags,
+        required: uniqueHashtags([...selectedCompanyTags, ...customTags])
+      };
+    }
+
+    function updateHashtagOptions() {
+      const companyName = document.getElementById('companyName').value.trim() || '퍼피댕';
+      const preferences = getHashtagPreferences(companyName);
+      document.getElementById('companyHashtagLabel').textContent = preferences.companyTag;
+      document.getElementById('companySalesHashtagLabel').textContent = normalizeHashtag(companyName + '강아지분양');
+      const status = document.getElementById('hashtagSelectionStatus');
+      status.textContent = preferences.required.length > 10
+        ? `고정 태그는 최대 10개입니다. 현재 ${preferences.required.length}개입니다.`
+        : `고정 태그 ${preferences.required.length}개 · 나머지는 원고에 맞게 자동 작성`;
+      status.className = preferences.required.length > 10 ? 'text-xs text-red-600' : 'text-xs text-[#8c6243]';
+    }
+
+    function buildHashtagInstruction(preferences) {
+      return `
+[공통 해시태그 선택 옵션 — 제목 업체명 옵션과 별도로 적용]
+- 마지막 줄에는 #을 붙인 서로 다른 해시태그를 정확히 10개 작성하세요.
+- 반드시 포함할 고정 태그: ${preferences.required.length ? preferences.required.join(' ') : '없음'}
+- 고정 태그를 먼저 포함하고 나머지는 이번 원고의 실제 내용에 맞는 태그로 채우세요.
+- 업체명 관련 태그는 위에서 명시적으로 선택하거나 직접 입력한 태그만 사용하세요. 선택되지 않은 업체명 태그를 임의로 추가하지 마세요.
+- 제목에 업체명을 포함하지 않는 옵션이더라도, 선택한 업체명 태그는 마지막 해시태그 줄에 포함하세요.
+- 해시태그는 마지막 한 줄에 공백 하나로 구분하고, 안내 문구는 넣지 마세요.`;
+    }
+
+    function finalizeHashtags(markdown, preferences, postType, infoTopicGroup) {
+      const lines = String(markdown || '').trimEnd().split(/\r?\n/);
+      const generated = [];
+      let end = lines.length;
+      let foundFooter = false;
+      while (end > 0) {
+        const line = lines[end - 1].trim();
+        if (!line) { end--; continue; }
+        const candidate = line.replace(/^(?:해시태그|태그)\s*[:：]\s*/, '');
+        if (/^(?:#[\p{L}\p{N}_]+\s*)+$/u.test(candidate)) {
+          generated.unshift(...candidate.match(/#[\p{L}\p{N}_]+/gu));
+          foundFooter = true;
+          end--;
+          continue;
+        }
+        if (foundFooter && /^(?:해시태그|태그)\s*[:：]?$/u.test(line)) { end--; continue; }
+        break;
+      }
+      const body = lines.slice(0, end).join('\n').trimEnd();
+      const required = uniqueHashtags(preferences.required);
+      const requiredKeys = new Set(required.map(tag => tag.toLowerCase()));
+      const companyKey = preferences.companyTag.slice(1).toLowerCase();
+      const allowed = tag => !companyKey || !tag.slice(1).toLowerCase().includes(companyKey) || requiredKeys.has(tag.toLowerCase());
+      const fallback = postType === 'promo'
+        ? ['강아지분양', '반려견분양', '분양상담', '강아지', '반려견', '반려생활', '강아지정보', '반려견정보', '강아지맞이', '반려견맞이', '강아지준비', '초보견주', '반려견과함께']
+        : infoTopicGroup === 'before'
+          ? ['강아지키우기전', '강아지준비', '반려견맞이', '강아지맞이', '반려생활준비', '초보견주', '강아지정보', '반려견정보', '강아지', '반려견', '반려생활', '반려견과함께', '보호자가이드']
+          : ['강아지정보', '반려견정보', '강아지팁', '반려견관리', '강아지생활', '반려생활', '강아지', '반려견', '초보견주', '반려견일상', '반려견과함께', '보호자가이드', '반려생활팁'];
+      const tags = uniqueHashtags([...required, ...generated, ...fallback]).filter(allowed).slice(0, 10);
+      return body + '\n\n' + tags.join(' ');
+    }
+
     const INFO_TOPIC_GROUPS = {
       before: {
         label: '강아지를 키우기 전 알아둘 정보',
@@ -750,6 +854,7 @@ ${otherHistory.length ? otherHistory.join('\n') : '기록 없음'}
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      updateHashtagOptions();
       updateHistoryUI();
       drawThumbnail();
     });
@@ -1148,6 +1253,12 @@ ${otherHistory.length ? otherHistory.join('\n') : '기록 없음'}
         return;
       }
 
+      const hashtagPreferences = getHashtagPreferences(companyName);
+      if (hashtagPreferences.required.length > 10) {
+        alert('고정 태그는 최대 10개까지 선택할 수 있습니다. 추가 태그를 줄여주세요.');
+        return;
+      }
+
       let userKeywords = "";
       let userSubKeywords = "";
       let includeCompanyInTitle = false;
@@ -1312,11 +1423,13 @@ ${promoStyle === 'review'
 - 인용구는 핵심 확인사항이나 메시지를 강조하는 데 사용하세요.
 `;
 }
+      systemInstruction += buildHashtagInstruction(hashtagPreferences);
       try {
         const selectedModel = document.getElementById('geminiModelSelect')?.value || 'gemini-3.8-flash';
         document.getElementById('generationProgress').textContent = `${selectedModel} 모델로 원고 생성 중...`;
         
-        const latestDraft = (await callGeminiApi(userApiKey, systemInstruction + '\n\n[사용자 작성 요청]\n' + prompt)).trim();
+        const generatedDraft = (await callGeminiApi(userApiKey, systemInstruction + '\n\n[사용자 작성 요청]\n' + prompt)).trim();
+        const latestDraft = finalizeHashtags(generatedDraft, hashtagPreferences, postType, infoTopicGroup);
         const chars = bodyCharCount(latestDraft);
         const closest = closestPrevious(latestDraft, previous);
         const finalStats = { chars, closest, passLength: chars >= 2000 && chars <= 2500, passSimilarity: closest.score < SIMILARITY_LIMIT };
